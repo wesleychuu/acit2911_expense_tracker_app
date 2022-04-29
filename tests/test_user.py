@@ -29,3 +29,21 @@ def test_email_invalid():
     with pytest.raises(ValueError):
         User(name="john smith", email=123123,
              username="hello", password="password")
+
+
+def test_username():
+    assert new_user.username == "alziv"
+
+
+def test_username_invalid():
+    """Username must be a string"""
+    with pytest.raises(ValueError):
+        User(name="bob", email="bob@gmail.com",
+             username=54333, password="password321")
+
+
+def test_username_too_short():
+    """Username must be at least 5 characters long"""
+    with pytest.raises(ValueError):
+        User(name="henry", email="henry@gmail.com",
+             username="henr", password="henryiscool")
