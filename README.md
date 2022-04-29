@@ -6,6 +6,6 @@ Welcome our ACIT 2911 project.
 
 ### v0.0.1
 
-- Made a RAEDME.md file
+- Made a README.md file
 - nothing else
-- [Funny link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+- [Click here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
