@@ -42,3 +42,4 @@ class User:
         for e in self.expenses:
             if e.get_expense_id() == expense_id:
                 e.edit_attr(attr, value)
+            break
