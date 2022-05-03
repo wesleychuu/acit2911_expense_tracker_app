@@ -36,10 +36,3 @@ class User:
                 break
 
         del self.expenses[index]
-
-    def edit_expense(self, expense_id: int, attr: str, value):
-        """Allow user to edit an existing expense"""
-        for e in self.expenses:
-            if e.get_expense_id() == expense_id:
-                e.edit_attr(attr, value)
-            break
