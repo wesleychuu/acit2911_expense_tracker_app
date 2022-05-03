@@ -150,21 +150,6 @@ def select_an_expense(conn, expenseid, userid):
     return cur.fetchone()
 
 
-def delete_expense(conn, id_tuple):
-    """
-    Delete an epense by user id and expense id
-    :param conn:  Connection to the SQLite database
-    :param userid: id of the user
-    :param expenseid: id of the expense
-    :return:
-    """
-    (eid, uid) = id_tuple
-    cur = conn.cursor()
-    cur.execute("DELETE FROM expenses WHERE id=? AND user_id=?",
-                (eid, uid,))
-    conn.commit()
-
-
 def main():
     database = "database.db"
     users_json = json.load(open("../data/users.json"))
