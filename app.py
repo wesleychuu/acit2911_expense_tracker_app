@@ -5,14 +5,10 @@ from models.user import User
 app = Flask(__name__)
 
 
-@app.route("/home")
-def homepage():
+@app.route("/home/user/<user_id>")
+def homepage(user_id):
+    """Render the homepage of a user -- shows their expenses"""
     return render_template("home.html")
-
-
-@app.route("/user/<user_id>")
-def user(user_id):
-    pass
 
 
 if __name__ == "__main__":
