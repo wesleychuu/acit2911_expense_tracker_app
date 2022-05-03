@@ -1,0 +1,30 @@
+[
+    {
+        "userid": 1,
+        "name": "Coffee",
+        "date": "2022-04-29",
+        "category": "Food",
+        "amount": 4.50
+    },
+    {
+        "userid": 1,
+        "name": "Laptop",
+        "date": "27/04/2022",
+        "category": "Technology",
+        "amount": 1200.00
+    },
+    {
+        "userid": 1,
+        "name": "Movie",
+        "date": "29/03/2022",
+        "category": "Entertainment",
+        "amount": 12.75
+    },
+    {
+        "userid": 2,
+        "name": "Burger",
+        "date": "29/03/2022",
+        "category": "Food",
+        "amount": 10.95
+    }
+]

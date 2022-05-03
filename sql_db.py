@@ -152,8 +152,8 @@ def select_an_expense(conn, expenseid, userid):
 
 def main():
     database = "database.db"
-    users_json = json.load(open("../data/users.json"))
-    expenses_json = json.load(open("../data/expenses.json"))
+    users_json = json.load(open("./data/users.json"))
+    expenses_json = json.load(open("./data/expenses.json"))
 
     sql_create_users_table = """ CREATE TABLE IF NOT EXISTS users (
                                         id integer PRIMARY KEY,

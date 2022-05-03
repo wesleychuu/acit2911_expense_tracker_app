@@ -1,7 +1,7 @@
 import json
 import sqlite3
 from flask import Flask, render_template, jsonify, request
-from database.sql_db import create_expenses, select_an_expense
+from sql_db import create_expenses, select_an_expense
 from models.expense import Expense
 from models.user import User
 from models.user_manager import UserManager

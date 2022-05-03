@@ -1,39 +1,14 @@
 [
     {
-        "userID": 0,
         "name": "Test dummy",
         "username": "testdummy",
         "email": "testdummy@testmail.ca",
-        "password": "Testing123@",
-        "expenses": [
-            {
-                "expenseID": 1,
-                "name": "Coffee",
-                "date": "12/04/2022",
-                "category": "Food",
-                "amount": 4.50
-            },
-            {
-                "expenseID": 2,
-                "name": "Laptop",
-                "date": "27/04/2022",
-                "category": "Technology",
-                "amount": 1200.00
-            },
-            {
-                "expenseID": 3,
-                "name": "Movie",
-                "date": "29/03/2022",
-                "category": "Entertainment",
-                "amount": 12.75
-            },
-            {
-                "expenseID": 4,
-                "name": "Burger",
-                "date": "29/03/2022",
-                "category": "Food",
-                "amount": 10.95
-            }
-        ]
+        "password": "Testing123@"
+    },
+    {
+        "name": "Test dummy2",
+        "username": "testdummy2",
+        "email": "testdummy2@testmail.ca",
+        "password": "Testing2123@"
     }
 ]
