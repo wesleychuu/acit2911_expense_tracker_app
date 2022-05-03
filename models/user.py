@@ -6,7 +6,7 @@ class User:
 
     id_iter = itertools.count(start=0, step=1)
 
-    def __init__(self, name, email, username, password):
+    def __init__(self, name, email, username, password, expenses=[]):
         if type(name) is not str:
             raise ValueError
 
@@ -18,7 +18,7 @@ class User:
         self.email = email
         self.username = username
         self.password = password
-        self.expenses = []
+        self.expenses = expenses
 
     def add_expense(self, expense: Expense):
         """Add an expense to user's list"""
