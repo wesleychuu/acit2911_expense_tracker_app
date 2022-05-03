@@ -32,12 +32,11 @@ def create_table(conn, create_table_sql):
         print(e)
 
 
-def create_users(conn, users):
+def create_users(conn, users: list):
     """
     Create users and insert into the users table
-    :param conn:
-    :param user:
-    :return: user id
+    :param conn: Connection object
+    :param users: list of users to insert
     """
     query = ''' INSERT INTO users(name,username,email,password)
               VALUES(?,?,?,?) '''
@@ -46,14 +45,12 @@ def create_users(conn, users):
     conn.commit()
 
 
-def create_expenses(conn, expenses):
+def create_expenses(conn, expenses: list):
     """
-    Create a new expense
-    :param conn:
-    :param expense:
-    :return:
+    Create expenses and insert into expenses table
+    :param conn: Connection object
+    :param expenses: list of expenses to insert
     """
-
     sql = ''' INSERT INTO expenses(user_id,name,date,category,amount)
               VALUES(?,?,?,?,?) '''
     cur = conn.cursor()
@@ -64,8 +61,13 @@ def create_expenses(conn, expenses):
 
 
 def populate_table(conn, name, json_data):
+    """
+    Populate database tables with given json data
+    :param conn: Connection object
+    :param name: a string identifying what type json data is (users or expenses)
+    :param json_data: json data to be convereted and inserted
+    """
     with conn:
-        # Populate users table with user json data
         columns = []
         column = []
         for data in json_data:
@@ -119,7 +121,6 @@ def main():
     if conn is not None:
         # create projects table
         create_table(conn, sql_create_users_table)
-
         # create tasks table
         create_table(conn, sql_create_expenses_table)
     else:
@@ -128,15 +129,8 @@ def main():
     with conn:
         # Populate users table with user json data
         populate_table(conn, "users", users_json)
+        # Populate expenses table with expenses json data
         populate_table(conn, "expenses", expenses_json)
-
-        # Populate expenses table with expense json data
-        # expense_1 = (user_id, 'Coffee', '2022-01-01', 'Food', 4.50)
-        # expense_2 = (user_id, 'Laptop', '2022-02-30', 'Technology', 1200.00)
-
-        # create expenses
-        # create_expense(conn, expense_1)
-        # create_expense(conn, expense_2)
 
 
 if __name__ == '__main__':
