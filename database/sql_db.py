@@ -32,25 +32,21 @@ def create_table(conn, create_table_sql):
         print(e)
 
 
-def create_user(conn, user):
+def create_users(conn, users):
     """
-    Create a new user into the users table
+    Create users and insert into the users table
     :param conn:
     :param user:
     :return: user id
     """
-    with open("../data/users.json", "w") as fp:
-        pass
-
-    sql = ''' INSERT INTO users(name,username,email,password)
+    query = ''' INSERT INTO users(name,username,email,password)
               VALUES(?,?,?,?) '''
     cur = conn.cursor()
-    cur.execute(sql, user)
+    cur.executemany(query, users)
     conn.commit()
-    return cur.lastrowid
 
 
-def create_expense(conn, expense):
+def create_expenses(conn, expenses):
     """
     Create a new expense
     :param conn:
@@ -61,14 +57,42 @@ def create_expense(conn, expense):
     sql = ''' INSERT INTO expenses(user_id,name,date,category,amount)
               VALUES(?,?,?,?,?) '''
     cur = conn.cursor()
-    cur.execute(sql, expense)
+    cur.executemany(sql, expenses)
     conn.commit()
 
     return cur.lastrowid
 
 
+def populate_table(conn, name, json_data):
+    with conn:
+        # Populate users table with user json data
+        columns = []
+        column = []
+        for data in json_data:
+            column = list(data.keys())
+            for col in column:
+                if col not in columns:
+                    columns.append(col)
+
+        value = []
+        values = []
+        for data in json_data:
+            for i in columns:
+                value.append(str(dict(data).get(i)))
+            values.append(list(value))
+            value.clear()
+
+        if name == "users":
+            create_users(conn, values)
+
+        if name == "expenses":
+            create_expenses(conn, values)
+
+
 def main():
     database = "database.db"
+    users_json = json.load(open("../data/users.json"))
+    expenses_json = json.load(open("../data/expenses.json"))
 
     sql_create_users_table = """ CREATE TABLE IF NOT EXISTS users (
                                         id integer PRIMARY KEY,
@@ -79,8 +103,8 @@ def main():
                                     ); """
 
     sql_create_expenses_table = """CREATE TABLE IF NOT EXISTS expenses (
-                                    user_id integer NOT NULL,
                                     id integer PRIMARY KEY,
+                                    user_id integer NOT NULL,
                                     name text NOT NULL,
                                     date numeric NOT NULL,
                                     category text NOT NULL,
@@ -102,18 +126,17 @@ def main():
         print("Error! cannot create the database connection.")
 
     with conn:
-        # create a new user
-        user = ('Test Dummy', 'testdummy',
-                'testdummy@testmail.ca', 'Testing123@')
-        user_id = create_user(conn, user)
+        # Populate users table with user json data
+        populate_table(conn, "users", users_json)
+        populate_table(conn, "expenses", expenses_json)
 
-        # expenses
-        expense_1 = (user_id, 'Coffee', '2022-01-01', 'Food', 4.50)
-        expense_2 = (user_id, 'Laptop', '2022-02-30', 'Technology', 1200.00)
+        # Populate expenses table with expense json data
+        # expense_1 = (user_id, 'Coffee', '2022-01-01', 'Food', 4.50)
+        # expense_2 = (user_id, 'Laptop', '2022-02-30', 'Technology', 1200.00)
 
         # create expenses
-        create_expense(conn, expense_1)
-        create_expense(conn, expense_2)
+        # create_expense(conn, expense_1)
+        # create_expense(conn, expense_2)
 
 
 if __name__ == '__main__':
