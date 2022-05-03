@@ -33,11 +33,11 @@ class UserManager:
         """Get the user ID of the latest user and add one"""
         return self.users[-1]["userid"] + 1
 
-    def add_user(self, instance: User):
-        if type(instance) is not User:
-            raise TypeError
-
-        self.users.append(instance)
+    def add_new_user(self, name, username, email, password):
+        """Create a new user and add them"""
+        id = self.get_latest_userid()
+        user = User(id, name, username, email, password)
+        self.users.append(user)
 
     def get_uesr_by_id(self, userid: int) -> User:
         """Find a user by ID and return the instance"""
