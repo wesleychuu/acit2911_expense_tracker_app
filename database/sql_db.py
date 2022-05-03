@@ -122,7 +122,7 @@ def select_user_by_id(conn, userid):
     return cur.fetchone()
 
 
-def select_expesnes_by_userid(conn, userid) -> list:
+def select_expenses_by_userid(conn, userid) -> list:
     """
     Query expenses by user id
     :param conn: the Connection object
@@ -135,6 +135,36 @@ def select_expesnes_by_userid(conn, userid) -> list:
     return cur.fetchall()
 
 
+def select_an_expense(conn, expenseid, userid):
+    """
+    Query expenses by user id
+    :param conn: the Connection object
+    :param userid: a user's id
+    :param expenseid: an expense's id
+    :return: the expense matching userid and expenseid
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM expenses WHERE id=? AND user_id=?",
+                (expenseid, userid,))
+
+    return cur.fetchone()
+
+
+def delete_expense(conn, id_tuple):
+    """
+    Delete an epense by user id and expense id
+    :param conn:  Connection to the SQLite database
+    :param userid: id of the user
+    :param expenseid: id of the expense
+    :return:
+    """
+    (eid, uid) = id_tuple
+    cur = conn.cursor()
+    cur.execute("DELETE FROM expenses WHERE id=? AND user_id=?",
+                (eid, uid,))
+    conn.commit()
+
+
 def main():
     database = "database.db"
     users_json = json.load(open("../data/users.json"))
@@ -143,7 +173,7 @@ def main():
     sql_create_users_table = """ CREATE TABLE IF NOT EXISTS users (
                                         id integer PRIMARY KEY,
                                         name text NOT NULL,
-                                        username text NOT NULL,
+                                        username text UNIQUE NOT NULL,
                                         email text NOT NULL,
                                         password text NOT NULL
                                     ); """
