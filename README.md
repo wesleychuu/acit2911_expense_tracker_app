@@ -1,6 +1,6 @@
 # Expense Tracker
 
-Welcome our ACIT 2911 project.
+Welcome to our ACIT 2911 project.
 
 ## Changelog
 
@@ -9,3 +9,4 @@ Welcome our ACIT 2911 project.
 - Made a README.md file
 - nothing else
 - [Click here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+- you clicked the link didn't you
