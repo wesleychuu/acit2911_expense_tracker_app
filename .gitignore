@@ -24,4 +24,7 @@ yarn-error.log*
 
 /venv
 
+# pytest and python things
 /.vscode
+/__pycache__
+/.pytest_cache
