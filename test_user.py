@@ -104,6 +104,7 @@ def test_password_no_letters():
 
 
 def test_add_expense():
+    """THIS MAY NOT WORK PROPERLY"""
     assert new_user2.add_expense(new_expense()) == new_user2.expenses
 
 
@@ -111,6 +112,16 @@ def test_add_invalid_expenses():
     """Expense must be an instance of the expense class"""
     with pytest.raises(TypeError):
         new_user2.add_expense("food")
+
+
+def test_delete_expense():
+    """THIS MAY NOT WORK PROPERLY"""
+    assert new_user2.delete_expense(new_expense()) == new_user2.expenses
+
+
+def test_delete_expense_invalid():
+    with pytest.raises(TypeError):
+        new_user2.delete_expense("school")
 
 
 def test_to_dict():
