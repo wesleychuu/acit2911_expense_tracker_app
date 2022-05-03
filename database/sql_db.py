@@ -37,6 +37,7 @@ def create_users(conn, users: list):
     Create users and insert into the users table
     :param conn: Connection object
     :param users: list of users to insert
+    :return:
     """
     query = ''' INSERT INTO users(name,username,email,password)
               VALUES(?,?,?,?) '''
@@ -44,12 +45,15 @@ def create_users(conn, users: list):
     cur.executemany(query, users)
     conn.commit()
 
+    return cur.lastrowid
+
 
 def create_expenses(conn, expenses: list):
     """
     Create expenses and insert into expenses table
     :param conn: Connection object
     :param expenses: list of expenses to insert
+    :return:
     """
     sql = ''' INSERT INTO expenses(user_id,name,date,category,amount)
               VALUES(?,?,?,?,?) '''
@@ -66,6 +70,7 @@ def populate_table(conn, name, json_data):
     :param conn: Connection object
     :param name: a string identifying what type json data is (users or expenses)
     :param json_data: json data to be convereted and inserted
+    :return:
     """
     with conn:
         columns = []
@@ -89,6 +94,45 @@ def populate_table(conn, name, json_data):
 
         if name == "expenses":
             create_expenses(conn, values)
+            print(values)
+
+
+def select_all_users(conn):
+    """
+    Query all rows in the users table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users")
+
+    return cur.fetchall()
+
+
+def select_user_by_id(conn, userid):
+    """
+    Query user by user id
+    :param conn: the Connection object
+    :param userid: a user's id
+    :return: 
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE id=?", (userid,))
+
+    return cur.fetchone()
+
+
+def select_expesnes_by_userid(conn, userid) -> list:
+    """
+    Query expenses by user id
+    :param conn: the Connection object
+    :param userid: a user's id
+    :return: list of user expenses
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM expenses WHERE user_id=?", (userid,))
+
+    return cur.fetchall()
 
 
 def main():
