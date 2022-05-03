@@ -1,5 +1,6 @@
 import pytest
 from models.user import User
+from models.expense import Expense, CATEGORIES
 
 
 @pytest.fixture
@@ -9,13 +10,27 @@ def new_user():
     return user1
 
 
+@pytest.fixture
+def new_user2():
+    user2 = User(name="Sean Walker", email="swalker22@outlook.com",
+                 username="swalker", password="seaniscool32")
+    return user2
+
+
+@pytest.fixture
+def new_expense():
+    expense1 = Expense(name="McDonalds", date="05/03/2022",
+                       category="Food", amount=5.23)
+    return expense1
+
+
 def test_name():
     assert new_user.name == "aleksandar zivkovic"
 
 
 def test_name_invalid():
     """Name must be a string"""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         User(name=12354, email="test@test.com",
              username="hello", password="password123")
 
@@ -26,7 +41,7 @@ def test_email():
 
 def test_email_invalid():
     """Email must be a string"""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         User(name="john smith", email=123123,
              username="hello", password="password453")
 
@@ -44,7 +59,7 @@ def test_username():
 
 def test_username_invalid():
     """Username must be a string"""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         User(name="bob wall", email="bob@gmail.com",
              username=54333, password="password321")
 
@@ -61,7 +76,8 @@ def test_password():
 
 
 def test_password_invalid():
-    with pytest.raises(ValueError):
+    """Password must be a string"""
+    with pytest.raises(TypeError):
         User(name="carl johnson", email="carlj@outlook.com",
              username="carljohn", password=12312)
 
@@ -78,3 +94,26 @@ def test_password_no_numbers():
     with pytest.raises(ValueError):
         User(name="john hunter", email="johnh@outlook.com",
              username="johnhunt", password="password")
+
+
+def test_password_no_letters():
+    """Password must contain at least one letter"""
+    with pytest.raises(ValueError):
+        User(name="hello world", email="hworld@gmail.com",
+             username="hworld", password="12343252")
+
+
+def test_add_expense():
+    assert new_user2.add_expense(new_expense()) == new_user2.expenses
+
+
+def test_add_invalid_expenses():
+    """Expense must be an instance of the expense class"""
+    with pytest.raises(TypeError):
+        new_user2.add_expense("food")
+
+
+def test_to_dict():
+    """Should return a dictionary of the user's attributes"""
+    assert new_user2.to_dict() == {
+        "userid": 2, "name": "Sean Walker", "username": "swalker", "password": "seaniscool32"}
