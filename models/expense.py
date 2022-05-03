@@ -1,6 +1,14 @@
-CATEGORIES = ["Food", "Apparel", "Entertainment",
-              "Lifestyle", "Miscellaneious", "Groceries",
-              "Services", "Technology", "School"]
+CATEGORIES = [
+    "Food",
+    "Apparel",
+    "Entertainment",
+    "Lifestyle",
+    "Miscellaneious",
+    "Groceries",
+    "Services",
+    "Technology",
+    "School",
+]
 
 
 class Expense:
@@ -12,13 +20,26 @@ class Expense:
         if type(date) is not str:
             raise TypeError
 
+        if len(date) != 10:
+            raise ValueError
+
+        if (
+            (date[0:2].isnumeric() == False)
+            or (date[3:5].isnumeric() == False)
+            or (date[6:10].isnumeric() == False)
+        ):
+            raise ValueError
+
+        if date[2] != "/" or date[5] != "/":
+            raise ValueError
+
         if type(category) is not str:
             raise TypeError
 
         if category not in CATEGORIES:
             raise ValueError
 
-        if type(amount) is not int or type(amount) is not float:
+        if type(amount) is not int and type(amount) is not float:
             raise TypeError
 
         if amount < 0:
@@ -29,68 +50,68 @@ class Expense:
         self.category = category
         self.amount = amount
 
-    @property
-    def name(self):
-        """Get expense name"""
-        return self.name
+    # @property
+    # def name(self):
+    #     """Get expense name"""
+    #     return self.name
 
-    @name.setter
-    def name(self, name):
-        """Set expense name"""
-        if type(name) is not str:
-            raise TypeError
+    # @name.setter
+    # def name(self, name):
+    #     """Set expense name"""
+    #     if type(name) is not str:
+    #         raise TypeError
 
-        self.name = name
+    #     self.name = name
 
-    @property
-    def date(self):
-        """Get expense name"""
-        return self.date
+    # @property
+    # def date(self):
+    #     """Get expense name"""
+    #     return self.date
 
-    @date.setter
-    def date(self, date):
-        """Set expense name"""
-        if type(date) is not str:
-            raise TypeError
+    # @date.setter
+    # def date(self, date):
+    #     """Set expense name"""
+    #     if type(date) is not str:
+    #         raise TypeError
 
-        self.date = date
+    #     self.date = date
 
-    @property
-    def category(self):
-        """Get expense name"""
-        return self.name
+    # @property
+    # def category(self):
+    #     """Get expense name"""
+    #     return self.name
 
-    @category.setter
-    def category(self, category):
-        """Set expense name"""
-        if type(category) is not str:
-            raise TypeError
+    # @category.setter
+    # def category(self, category):
+    #     """Set expense name"""
+    #     if type(category) is not str:
+    #         raise TypeError
 
-        if category not in CATEGORIES:
-            raise ValueError
+    #     if category not in CATEGORIES:
+    #         raise ValueError
 
-        self.category = category
+    #     self.category = category
 
-    @property
-    def amount(self):
-        """Get expense amount"""
-        return self.amount
+    # @property
+    # def amount(self):
+    #     """Get expense amount"""
+    #     return self.amount
 
-    @amount.setter
-    def amount(self, amount):
-        """Set expense amount"""
-        if type(amount) is not int or type(amount) is not float:
-            raise TypeError
+    # @amount.setter
+    # def amount(self, amount):
+    #     """Set expense amount"""
+    #     if type(amount) is not int or type(amount) is not float:
+    #         raise TypeError
 
-        if amount < 0:
-            raise ValueError
+    #     if amount < 0:
+    #         raise ValueError
 
-        self.amount = amount
+    #     self.amount = amount
 
     def to_dict(self):
         return {
             "name": self.name,
             "date": self.date,
             "category": self.category,
-            "amount": self.amount
+            "amount": self.amount,
         }
