@@ -1,4 +1,5 @@
 import itertools
+import datetime
 
 CATEGORIES = [
     "Food",
@@ -21,21 +22,12 @@ class Expense:
         if type(name) is not str:
             raise TypeError
 
-        # format: MM/DD/YYYY, done in HTML
-        if type(date) is not str:
-            raise TypeError
+        # format: YYYY-MM-DD, done in HTML
 
-        if len(date) != 10:
-            raise ValueError
+        today = datetime.date.today().strftime("%Y-%m-%d")
+        date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y-%m-%d")
 
-        if (
-            (date[0:2].isnumeric() == False)
-            or (date[3:5].isnumeric() == False)
-            or (date[6:10].isnumeric() == False)
-        ):
-            raise ValueError
-
-        if date[2] != "/" or date[5] != "/":
+        if date > today:
             raise ValueError
 
         if type(category) is not str:
@@ -61,17 +53,20 @@ class Expense:
         if attr == "name":
             self.name = value
 
-        if attr == "date":
+        elif attr == "date":
             self.date = value
 
-        if attr == "category":
+        elif attr == "category":
             self.category = value
 
-        if attr == "amount":
+        elif attr == "amount":
             if type(value) not in [int, float]:
                 raise ValueError
 
             self.amount = value
+
+        else:
+            raise TypeError
 
     def get_expense_id(self):
         return self.id
