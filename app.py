@@ -1,7 +1,7 @@
 import json
 import sqlite3
 from flask import Flask, render_template, jsonify, request
-from sql_db import create_expenses, select_an_expense
+from sql_db import create_expenses, select_an_expense, select_expenses_by_userid
 from models.expense import Expense
 from models.user import User
 from models.user_manager import UserManager
@@ -9,10 +9,25 @@ from models.user_manager import UserManager
 app = Flask(__name__)
 
 
+def data_to_dict(data_tup: tuple) -> dict:
+    return {
+        "name": data_tup[2],
+        "date": data_tup[3],
+        "category": data_tup[4],
+        "amount": data_tup[5]
+    }
+
 @app.route("/home/user/<user_id>")
 def homepage(user_id):
     """Render the homepage of a user -- shows their expenses"""
-    return render_template("home.html")
+    conn = sqlite3.connect("database.db")
+    tuple_expenses = select_expenses_by_userid(conn, user_id)
+    conn.close()
+    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
+    
+    # total_expense = 0.0
+
+    return render_template("home.html", user_expenses = user_expenses)
 
 
 @app.route("/users", methods=["GET"])
