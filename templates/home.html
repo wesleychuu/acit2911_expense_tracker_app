@@ -34,12 +34,6 @@
         <section class="expense-cards">
             <!-- List of current existing user expenses -->
             <table>
-                <tr>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                </tr>
                 {% for user_expense in user_expenses %}
                     <tr>
                         <td>
@@ -47,10 +41,11 @@
                         </td>
                         <td>
                             {{ user_expense.name }}
-                        </td>
-                        <td>
                             {{ user_expense.category }}
                         </td>
+                        <!-- <td>
+                            {{ user_expense.category }}
+                        </td> -->
                         <td>
                             ${{ user_expense.amount }}
                         </td>
