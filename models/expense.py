@@ -22,22 +22,10 @@ class Expense:
         if type(name) is not str:
             raise TypeError
 
-        # format: MM/DD/YYYY, done in HTML
-        if type(date) is not str:
-            raise TypeError
+        # format: YYYY-MM-DD, done in HTML
 
-        if len(date) != 10:
-            raise ValueError
-
-        # if (
-        #     (date[0:2].isnumeric() == False)
-        #     or (date[3:5].isnumeric() == False)
-        #     or (date[6:10].isnumeric() == False)
-        # ):
-        #     raise ValueError
-
-        today = datetime.date.today().strftime("%m/%d/%Y")
-        date = datetime.datetime.strptime(date, "%m/%d/%Y").strftime("%m/%d/%Y")
+        today = datetime.date.today().strftime("%Y-%m-%d")
+        date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y-%m-%d")
 
         if date > today:
             raise ValueError
