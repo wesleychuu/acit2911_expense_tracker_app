@@ -37,6 +37,8 @@ def test_invalid_expense():
         Expense("KFC", "01-01-2001", "Food", 10.56)
     with pytest.raises(ValueError):
         Expense("KFC", "01/01/2001", "Food", -10.56)
+    with pytest.raises(ValueError):
+        Expense("KFC", "99/99/9999", "Food", 10.56)
 
 
 def test_edit_attr(ex1):
