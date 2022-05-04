@@ -1,0 +1,22 @@
+:root {
+    --header-footer: #2A98A2;
+    --header-txt: #FFFFFF;
+    --heading1-font: 'Merriweather Sans', sans-serif;
+}
+
+table {
+    border: solid 1px;
+}
+
+tr {
+    text-align: center;
+    border: solid 1px;
+}
+
+th {
+    border: solid 1px;
+}
+
+td {
+    padding: 5px;
+}
