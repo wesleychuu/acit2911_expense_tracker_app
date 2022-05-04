@@ -130,6 +130,6 @@ def get_total_expenses_by_category(conn, uid: int, category: str) -> int:
     
     total = 0
     for row in cur.fetchall():
-        total += row
+        total += row[0]
     
     return total

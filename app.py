@@ -50,8 +50,8 @@ def add_expense(uid):
 
     try:
         conn = sqlite3.connect("database.db")
-        insert_expense(conn, (uid, f'{data["name"]}',
-                        f'{data["date"]}', f'{data["category"]}', f'{data["amount"]}'))
+        insert_expense(conn, uid, f'{data["name"]}',
+                        f'{data["date"]}', f'{data["category"]}', f'{data["amount"]}')
         conn.close()
         return "", 201
     except ValueError:
