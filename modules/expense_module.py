@@ -133,3 +133,23 @@ def get_total_expenses_by_category(conn, uid: int, category: str) -> int:
         total += row[0]
     
     return total
+
+def get_total_expenses(conn, uid: int) -> int:
+    """
+    Get the total of all user expenses
+    
+    Parameters:
+        conn:           the Connection object
+        uid (int):      the user's id
+    
+    Return:
+        agregate total amount of user expenses
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT amount FROM expenses WHERE user_id=?", (uid,))
+    
+    total = 0
+    for row in cur.fetchall():
+        total += row[0]
+    
+    return total
