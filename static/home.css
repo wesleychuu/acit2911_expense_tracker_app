@@ -1,22 +1,24 @@
 :root {
     --header-footer: #2A98A2;
     --header-txt: #FFFFFF;
-    --heading1-font: 'Merriweather Sans', sans-serif;
+    --main-font: 'Merriweather Sans', sans-serif;
+}
+
+.expense-cards {
+    min-width: 10%;
+    margin: auto;
 }
 
 table {
-    border: solid 1px;
-}
-
-tr {
+    font-family: var(--main-font);
+    align-self: center;
+    border-collapse: separate;
+    border-spacing: 0 10px;
     text-align: center;
-    border: solid 1px;
-}
-
-th {
-    border: solid 1px;
 }
 
 td {
+    background-color: #cac8c6;
+    border: solid 1px;
     padding: 5px;
 }
