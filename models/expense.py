@@ -65,17 +65,20 @@ class Expense:
         if attr == "name":
             self.name = value
 
-        if attr == "date":
+        elif attr == "date":
             self.date = value
 
-        if attr == "category":
+        elif attr == "category":
             self.category = value
 
-        if attr == "amount":
+        elif attr == "amount":
             if type(value) not in [int, float]:
                 raise ValueError
 
             self.amount = value
+
+        else:
+            raise TypeError
 
     def get_expense_id(self):
         return self.id
