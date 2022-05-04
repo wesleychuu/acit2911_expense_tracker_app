@@ -1,15 +1,15 @@
 import sqlite3
 
-def insert_user(conn, name, username, email, password):
+def insert_user(conn, name: str, username: str, email: str, password: str) -> int:
     """
     Create user and insert into the users table
 
     Parameters:
-        conn:   Connection object
-        name:   user's name
-        username:   user's username
-        email:      user's email
-        password:   user's password, hashed
+        conn:           the Connection object
+        name (str):     user name
+        username (str): user username
+        email (str):    user email
+        password (str): user password, hashed
 
     Return:
         id of last row
@@ -21,7 +21,7 @@ def insert_user(conn, name, username, email, password):
 
     return cur.lastrowid
 
-def select_all_users(conn):
+def select_all_users(conn) -> list:
     """
     Query all users
 
@@ -29,7 +29,7 @@ def select_all_users(conn):
         conn: the Connection object
     
     Return:
-        list of all users
+        list of all users as tuples
     """
     cur = conn.cursor()
     cur.execute("SELECT * FROM users")
@@ -37,25 +37,29 @@ def select_all_users(conn):
     return cur.fetchall()
 
 
-def select_user_by_id(conn, uid):
+def select_user_by_id(conn, uid: str) -> tuple:
     """
     Query user by user id
-    :param conn: the Connection object
-    :param userid: a user's id
-    :return: 
+
+    Parameters: 
+        conn:       the Connection object
+        uid (int):  id of user to find
+    
+    Return:
+        a user and their information as a tuple
     """
     cur = conn.cursor()
     cur.execute("SELECT * FROM users WHERE id=?", (uid,))
 
     return cur.fetchone()
 
-def delete_user_by_id(conn, uid):
+def delete_user_by_id(conn, uid: int):
     """
     Delete a user by id
 
     Parameters: 
-        conn:   Connection object
-        uid:    id of user to delete
+        conn:       the Connection object
+        uid (int):  id of user to delete
     """
     cur = conn.cursor()
     cur.execute("DELETE FROM users WHERE id=?", (uid,))
