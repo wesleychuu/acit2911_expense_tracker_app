@@ -39,7 +39,7 @@ def add_expense(user_id):
 
     try:
         conn = sqlite3.connect("database.db")
-        create_expenses(conn, [(f'{data["userid"]}', f'{data["name"]}',
+        create_expenses(conn, [(user_id, f'{data["name"]}',
                         f'{data["date"]}', f'{data["category"]}', f'{data["amount"]}')])
         conn.close()
         return "", 201
