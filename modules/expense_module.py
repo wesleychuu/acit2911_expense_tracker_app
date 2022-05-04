@@ -22,7 +22,7 @@ def insert_expense(conn, uid, name, date, category, amount):
 
     return cur.lastrowid
 
-def get_one_expense(conn, eid, uid):
+def select_one_expense(conn, eid, uid):
     """
     Query an expense by user id
 
@@ -38,9 +38,9 @@ def get_one_expense(conn, eid, uid):
     cur.execute("SELECT * FROM expenses WHERE id=? AND user_id=?",
                 (eid, uid,))
 
-    return str(cur.fetchone())
+    return cur.fetchone()
 
-def get_all_user_expenses(conn, uid) -> list:
+def select_expenses_by_uid(conn, uid) -> list:
     """
     Query all expenses by user id
 
@@ -54,9 +54,9 @@ def get_all_user_expenses(conn, uid) -> list:
     cur = conn.cursor()
     cur.execute("SELECT * FROM expenses WHERE user_id=?", (uid,))
 
-    return str(cur.fetchall())
+    return cur.fetchall()
 
-def delete_an_expense(conn, eid, uid):
+def delete_one_expense(conn, eid, uid):
     cur = conn.cursor()
     cur.execute("DELETE FROM expenses WHERE id=? AND user_id=?", (eid, uid,))
     conn.commit()
@@ -79,4 +79,4 @@ def get_all_expenses(conn):
     cur = conn.cursor()
     cur.execute("SELECT * FROM expenses")
 
-    return str(cur.fetchall())
+    return cur.fetchall()

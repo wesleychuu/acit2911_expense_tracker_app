@@ -34,7 +34,7 @@ def select_all_users(conn):
     cur = conn.cursor()
     cur.execute("SELECT * FROM users")
 
-    return str(cur.fetchall())
+    return cur.fetchall()
 
 
 def select_user_by_id(conn, uid):
@@ -47,7 +47,7 @@ def select_user_by_id(conn, uid):
     cur = conn.cursor()
     cur.execute("SELECT * FROM users WHERE id=?", (uid,))
 
-    return str(cur.fetchone())
+    return cur.fetchone()
 
 def delete_user_by_id(conn, uid):
     """

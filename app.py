@@ -1,10 +1,7 @@
-import json
 import sqlite3
-from flask import Flask, render_template, jsonify, request
-from sql_db import create_expenses, select_an_expense, select_expenses_by_userid
-from models.expense import Expense
-from models.user import User
-from models.user_manager import UserManager
+from flask import Flask, render_template, request
+from modules.expense_module import *
+from modules.user_module import *
 
 app = Flask(__name__)
 
@@ -17,15 +14,15 @@ def data_to_dict(data_tup: tuple) -> dict:
         "amount": data_tup[5]
     }
 
-@app.route("/home/user/<user_id>")
-def homepage(user_id):
+@app.route("/home/user/<uid>")
+def homepage(uid):
     """Render the homepage of a user -- shows their expenses"""
     conn = sqlite3.connect("database.db")
-    tuple_expenses = select_expenses_by_userid(conn, user_id)
+    tuple_expenses = select_expenses_by_uid(conn, uid)
     conn.close()
     user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
     
-    # total_expense = 0.0
+    # total_expense = 0.0 
 
     return render_template("home.html", user_expenses = user_expenses)
 
@@ -33,41 +30,40 @@ def homepage(user_id):
 @app.route("/users", methods=["GET"])
 def get_users():
     conn = sqlite3.connect("database.db")
-    users = conn.execute('SELECT * FROM users').fetchall()
+    users = select_all_users(conn)
     conn.close()
     return str(users)
 
 
-@app.route("/user/<user_id>", methods=["GET"])
-def get_user(user_id):
+@app.route("/user/<uid>", methods=["GET"])
+def get_user(uid):
     conn = sqlite3.connect("database.db")
-    user = conn.execute(
-        "SELECT * FROM users WHERE id=?", (user_id,)).fetchone()
+    user = select_user_by_id(conn, uid)
     conn.close()
     return str(user)
 
 
-@app.route("/user/<user_id>/add", methods=["POST"])
-def add_expense(user_id):
+@app.route("/user/<uid>/add", methods=["POST"])
+def add_expense(uid):
     """Adds an expense under the user's ID"""
     data = request.json
 
     try:
         conn = sqlite3.connect("database.db")
-        create_expenses(conn, [(user_id, f'{data["name"]}',
-                        f'{data["date"]}', f'{data["category"]}', f'{data["amount"]}')])
+        insert_expense(conn, (uid, f'{data["name"]}',
+                        f'{data["date"]}', f'{data["category"]}', f'{data["amount"]}'))
         conn.close()
         return "", 201
     except ValueError:
         return "", 400
 
 
-@app.route("/user/<user_id>/edit/<expense_id>", methods=["GET"])
-def get_expense(user_id, expense_id):
+@app.route("/user/<uid>/edit/<eid>", methods=["GET"])
+def get_expense(uid, eid):
     """View an expense by user id and expense id"""
     try:
         conn = sqlite3.connect("database.db")
-        expense = select_an_expense(conn, expenseid=expense_id, userid=user_id)
+        expense = select_one_expense(conn, eid=eid, uid=uid)
         conn.close()
         return str(expense), 201
     except ValueError:
@@ -79,10 +75,7 @@ def delete_expense(eid, uid):
     """Delete an expense by its id"""
     try:
         conn = sqlite3.connect("database.db")
-        cur = conn.cursor()
-        cur.execute(
-            "DELETE FROM expenses WHERE id=? AND user_id=?", (eid, uid,))
-        conn.commit()
+        delete_one_expense(conn, eid, uid)
         conn.close()
         return "", 201
     except ValueError:
