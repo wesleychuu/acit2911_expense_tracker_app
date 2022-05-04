@@ -1,4 +1,5 @@
 import itertools
+import datetime
 
 CATEGORIES = [
     "Food",
@@ -28,14 +29,17 @@ class Expense:
         if len(date) != 10:
             raise ValueError
 
-        if (
-            (date[0:2].isnumeric() == False)
-            or (date[3:5].isnumeric() == False)
-            or (date[6:10].isnumeric() == False)
-        ):
-            raise ValueError
+        # if (
+        #     (date[0:2].isnumeric() == False)
+        #     or (date[3:5].isnumeric() == False)
+        #     or (date[6:10].isnumeric() == False)
+        # ):
+        #     raise ValueError
 
-        if date[2] != "/" or date[5] != "/":
+        today = datetime.date.today().strftime("%m/%d/%Y")
+        date = datetime.datetime.strptime(date, "%m/%d/%Y").strftime("%m/%d/%Y")
+
+        if date > today:
             raise ValueError
 
         if type(category) is not str:
