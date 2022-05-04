@@ -97,59 +97,6 @@ def populate_table(conn, name, json_data):
             print(values)
 
 
-def select_all_users(conn):
-    """
-    Query all rows in the users table
-    :param conn: the Connection object
-    :return:
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM users")
-
-    return cur.fetchall()
-
-
-def select_user_by_id(conn, userid):
-    """
-    Query user by user id
-    :param conn: the Connection object
-    :param userid: a user's id
-    :return: 
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM users WHERE id=?", (userid,))
-
-    return cur.fetchone()
-
-
-def select_expenses_by_userid(conn, userid) -> list:
-    """
-    Query expenses by user id
-    :param conn: the Connection object
-    :param userid: a user's id
-    :return: list of user expenses
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM expenses WHERE user_id=?", (userid,))
-
-    return cur.fetchall()
-
-
-def select_an_expense(conn, expenseid, userid):
-    """
-    Query expenses by user id
-    :param conn: the Connection object
-    :param userid: a user's id
-    :param expenseid: an expense's id
-    :return: the expense matching userid and expenseid
-    """
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM expenses WHERE id=? AND user_id=?",
-                (expenseid, userid,))
-
-    return cur.fetchone()
-
-
 def main():
     database = "database.db"
     users_json = json.load(open("./data/users.json"))
