@@ -22,7 +22,7 @@ def homepage(uid):
     conn.close()
     user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
     
-    # total_expense = 0.0
+    # total_expense = 0.0 
 
     return render_template("home.html", user_expenses = user_expenses)
 
