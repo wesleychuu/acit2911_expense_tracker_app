@@ -16,7 +16,7 @@ def data_to_dict(data_tup: tuple) -> dict:
     }
 
 
-@app.route("/home/user/<uid>")
+@app.route("/user/<uid>")
 def homepage(uid):
     """Render the homepage of a user -- shows their expenses"""
     conn = sqlite3.connect("database.db")
@@ -34,22 +34,6 @@ def homepage(uid):
                      for each_expense in tuple_expenses]
 
     return render_template("home.html", user_expenses=user_expenses, total_category_exp=total_category_exp, total_expense=str(total_expense))
-
-
-@app.route("/users", methods=["GET"])
-def get_users():
-    conn = sqlite3.connect("database.db")
-    users = select_all_users(conn)
-    conn.close()
-    return str(users)
-
-
-@app.route("/user/<uid>", methods=["GET"])
-def get_user(uid):
-    conn = sqlite3.connect("database.db")
-    user = select_user_by_id(conn, uid)
-    conn.close()
-    return str(user)
 
 
 @app.route("/user/<uid>/add", methods=["GET"])
@@ -74,7 +58,7 @@ def add_expense(uid):
 
 @app.route("/user/<uid>/edit/<eid>", methods=["GET"])
 def get_expense(uid, eid):
-    """View an expense by user id and expense id"""
+    """View an expense by user id and expense id for editing"""
     try:
         conn = sqlite3.connect("database.db")
         expense = select_one_expense(conn, eid=eid, uid=uid)
@@ -94,6 +78,22 @@ def delete_expense(eid, uid):
         return "", 201
     except ValueError:
         return "", 400
+
+
+# @app.route("/users", methods=["GET"])
+# def get_users():
+#     conn = sqlite3.connect("database.db")
+#     users = select_all_users(conn)
+#     conn.close()
+#     return str(users)
+
+
+# @app.route("/user/<uid>", methods=["GET"])
+# def get_user(uid):
+#     conn = sqlite3.connect("database.db")
+#     user = select_user_by_id(conn, uid)
+#     conn.close()
+#     return str(user)
 
 
 if __name__ == "__main__":
