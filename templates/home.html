@@ -25,10 +25,15 @@
         <!-- Main content -->
         <section class="total-expense">
             <!-- Display for total user expense goes here -->
+            <p>Total: ${{ total_expense }}</p>
         </section>
 
         <section class="pie-chart-display">
             <!-- Display for pie chart goes here -->
+            <!-- {{ total_category_exp }}
+            {% for category_exp in total_category_exp %}
+                {{ category_exp }}
+            {% endfor %} -->
         </section>
 
         <section class="expense-cards">
@@ -39,13 +44,10 @@
                         <td>
                             {{ user_expense.date }}
                         </td>
-                        <td>
+                        <td class="name-category">
                             {{ user_expense.name }}
                             {{ user_expense.category }}
                         </td>
-                        <!-- <td>
-                            {{ user_expense.category }}
-                        </td> -->
                         <td>
                             ${{ user_expense.amount }}
                         </td>
