@@ -6,7 +6,7 @@ CATEGORIES = [
     "Apparel",
     "Entertainment",
     "Lifestyle",
-    "Miscellaneious",
+    "Miscellaneous",
     "Groceries",
     "Services",
     "Technology",
