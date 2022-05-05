@@ -52,7 +52,7 @@ def add_expense(uid):
     try:
         insert_expense(
             conn, uid, data["name"], data["date"], data["category"], data["amount"])
-        return redirect(f'/user/{uid}'), 201
+        return redirect(f'/user/{uid}'), 301
     except ValueError:
         return "", 400
     finally:
