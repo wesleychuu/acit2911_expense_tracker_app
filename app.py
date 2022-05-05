@@ -15,6 +15,7 @@ def data_to_dict(data_tup: tuple) -> dict:
         "amount": data_tup[5]
     }
 
+
 @app.route("/home/user/<uid>")
 def homepage(uid):
     """Render the homepage of a user -- shows their expenses"""
@@ -23,14 +24,16 @@ def homepage(uid):
 
     total_category_exp = []
     for category in CATEGORIES:
-        total_category_exp.append(get_total_expenses_by_category(conn, uid, category))
+        total_category_exp.append(
+            get_total_expenses_by_category(conn, uid, category))
 
     total_expense = get_total_expenses(conn, uid)
     conn.close()
 
-    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
+    user_expenses = [data_to_dict(each_expense)
+                     for each_expense in tuple_expenses]
 
-    return render_template("home.html", user_expenses = user_expenses, total_category_exp = total_category_exp, total_expense = str(total_expense))
+    return render_template("home.html", user_expenses=user_expenses, total_category_exp=total_category_exp, total_expense=str(total_expense))
 
 
 @app.route("/users", methods=["GET"])
@@ -49,6 +52,11 @@ def get_user(uid):
     return str(user)
 
 
+@app.route("/user/<uid>/add", methods=["GET"])
+def load_add_page(uid):
+    return render_template("add_expense.html")
+
+
 @app.route("/user/<uid>/add", methods=["POST"])
 def add_expense(uid):
     """Adds an expense under the user's ID"""
@@ -57,7 +65,7 @@ def add_expense(uid):
     try:
         conn = sqlite3.connect("database.db")
         insert_expense(conn, uid, f'{data["name"]}',
-                        f'{data["date"]}', f'{data["category"]}', f'{data["amount"]}')
+                       f'{data["date"]}', f'{data["category"]}', f'{data["amount"]}')
         conn.close()
         return "", 201
     except ValueError:
