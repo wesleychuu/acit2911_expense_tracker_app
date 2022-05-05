@@ -2,6 +2,7 @@ import sqlite3
 from flask import Flask, render_template, request
 from modules.expense_module import *
 from modules.user_module import *
+from models.expense import CATEGORIES
 
 app = Flask(__name__)
 
@@ -19,12 +20,17 @@ def homepage(uid):
     """Render the homepage of a user -- shows their expenses"""
     conn = sqlite3.connect("database.db")
     tuple_expenses = select_expenses_by_uid(conn, uid)
-    conn.close()
-    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
-    
-    # total_expense = 0.0 
 
-    return render_template("home.html", user_expenses = user_expenses)
+    total_category_exp = []
+    for category in CATEGORIES:
+        total_category_exp.append(get_total_expenses_by_category(conn, uid, category))
+
+    total_expense = get_total_expenses(conn, uid)
+    conn.close()
+
+    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
+
+    return render_template("home.html", user_expenses = user_expenses, total_category_exp = total_category_exp, total_expense = str(total_expense))
 
 
 @app.route("/users", methods=["GET"])

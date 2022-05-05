@@ -123,7 +123,7 @@ def get_total_expenses_by_category(conn, uid: int, category: str) -> int:
         category (str): the category to filter
     
     Return:
-        agregate total amount of the given category
+        aggregate total amount of the given category
     """
     cur = conn.cursor()
     cur.execute("SELECT amount FROM expenses WHERE user_id=? AND category=?", (uid,category,))
@@ -143,7 +143,7 @@ def get_total_expenses(conn, uid: int) -> int:
         uid (int):      the user's id
     
     Return:
-        agregate total amount of user expenses
+        aggregate total amount of user expenses
     """
     cur = conn.cursor()
     cur.execute("SELECT amount FROM expenses WHERE user_id=?", (uid,))
