@@ -152,4 +152,4 @@ def get_total_expenses(conn, uid: int) -> int:
     for row in cur.fetchall():
         total += row[0]
     
-    return total
+    return '{:.2f}'.format(round(total, 2))
