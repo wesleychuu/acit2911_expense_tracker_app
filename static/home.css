@@ -12,11 +12,6 @@
     color: var(--content-txt);
 }
 
-.expense-cards {
-    /* min-width: 10%; */
-    margin: auto;
-}
-
 table {
     font-family: var(--main-font);
     align-self: center;
@@ -25,12 +20,23 @@ table {
     text-align: center;
 }
 
-td {
-    background-color: #cac8c6;
-    padding: 5px 2px 5px 2px;
+th {
+    color: var(--header-txt);
+    background-color: var(--header-footer);
 }
 
-.name-category {
-    border-left: solid 1px;
-    border-right: solid 1px;
+th,
+td {
+    border: solid black 1px;
+    padding: 5px 1px 5px 1px;
+}
+
+.pie-chart-display {
+    width: max-content;
+    height: max-content;
+    align-self: center;
+}
+
+td {
+    background-color: #cac8c6;
 }

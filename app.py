@@ -34,7 +34,20 @@ def homepage(uid):
     user_expenses = [data_to_dict(each_expense)
                      for each_expense in tuple_expenses]
 
-    return render_template("home.html", user_expenses=user_expenses, total_category_exp=total_category_exp, total_expense=str(total_expense))
+    pie_data = {
+        'Category': 'Amount',
+        "Food": total_category_exp[0],
+        "Apparel": total_category_exp[1],
+        "Entertainment": total_category_exp[2],
+        "Lifestyle": total_category_exp[3],
+        "Miscellaneous": total_category_exp[4],
+        "Groceries": total_category_exp[5],
+        "Services": total_category_exp[6],
+        "Technology": total_category_exp[7],
+        "School": total_category_exp[8],
+    }
+    
+    return render_template("home.html", user_expenses=user_expenses, total_expense=str(total_expense), data=pie_data)
 
 
 @app.route("/user/<uid>/add", methods=["GET"])

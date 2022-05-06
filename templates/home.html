@@ -1,70 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'app.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@500&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="/static/app.css" rel="stylesheet">
-    <link href="/static/home.css" rel="stylesheet">
-    <title>Home</title>
-</head>
+{% block css_linking %}
+<link href="/static/home.css" rel="stylesheet"> {% endblock %}
+{% block title %} Home {% endblock %}
+{% block heading1 %} Home {% endblock %}
+{% block homepage_pie_chart %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            {% for key, value in data.items() %}
+    {% if value is string %}
+    ['{{ key }}', '{{ value }}'],
+        {% else %}
+    ['{{ key }}', {{ value }}],
+        {% endif %}
+    {% endfor %}
+        ]);
 
-<body>
-    <header>
-        <h1>Home</h1>
-    </header>
 
-    <main class="main-content">
-        <!-- Main content -->
-        <section class="total-expense">
-            <!-- Display for total user expense goes here -->
-            <p>Total: ${{ total_expense }}</p>
-        </section>
+    let options = {
+        pieHole: 0.5
+    };
 
-        <section class="pie-chart-display">
-            <!-- Display for pie chart goes here -->
-            <!-- {{ total_category_exp }}
-            {% for category_exp in total_category_exp %}
-                {{ category_exp }}
-            {% endfor %} -->
-        </section>
+    let chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+    chart.draw(data, options);
+    }
+</script>
+{% endblock %}
 
-        <section class="expense-cards">
-            <!-- List of current existing user expenses -->
-            <table>
-                {% for user_expense in user_expenses %}
-                    <tr>
-                        <td>
-                            {{ user_expense.date }}
-                        </td>
-                        <td class="name-category">
-                            {{ user_expense.name }}
-                            {{ user_expense.category }}
-                        </td>
-                        <td>
-                            ${{ user_expense.amount }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </section>
-    </main>
+{% block main_content %}
+<section class="total-expense">
+    <!-- Display for total user expense goes here -->
+    <p>Total: ${{ total_expense }}</p>
+</section>
 
-    <footer>
-        <nav>
-            <span class="icons" id="go-home"><i class="fa fa-home" aria-hidden="true"></i></span>
-            <span class="icons" id="go-search"><i class="fa fa-search" aria-hidden="true"></i></span>
-            <span class="icons" id="go-add"><i class="fa fa-plus" aria-hidden="true"></i></span>
-            <span class="icons" id="go-user"><i class="fa fa-user" aria-hidden="true"></i></span>
-        </nav>
-    </footer>
-</body>
+<section class="pie-chart-display">
+    <!-- Display for pie chart goes here -->
+    <div style=" width: 100%; overflow: hidden;">
+        <div id="piechart_3d" style="width: 300px; height: 167px; overflow: hidden;"></div>
+    </div>
+</section>
 
-</html>
+<section class="expense-cards">
+    <!-- List of current existing user expenses -->
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Amount</th>
+        </tr>
+        {% for user_expense in user_expenses %}
+        <tr>
+            <td>
+                {{ user_expense.date }}
+            </td>
+            <td>
+                {{ user_expense.name }}
+            </td>
+            <td>
+                {{ user_expense.category }}
+            </td>
+            <td>
+                ${{ user_expense.amount }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
