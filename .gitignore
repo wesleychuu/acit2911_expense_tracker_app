@@ -27,5 +27,6 @@ yarn-error.log*
 # pytest and python things
 /.vscode
 __pycache__
-/.pytest_cache
+.pytest_cache
+.coverage
 
