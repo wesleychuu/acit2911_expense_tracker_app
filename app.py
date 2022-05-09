@@ -1,11 +1,16 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect
+from flask_bootstrap import Bootstrap
+from flask import Flask, render_template, request, redirect, url_for, session
 from modules.expense_module import *
 from modules.user_module import *
+from models.login_form import LoginForm
+from models.register_form import RegisterForm
 from sql_db import create_connection
 from models.expense import CATEGORIES
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "Thisisspposedtobesecret"
+Bootstrap(app)
 
 
 def data_to_dict(data_tup: tuple) -> dict:
@@ -15,6 +20,37 @@ def data_to_dict(data_tup: tuple) -> dict:
         "category": data_tup[4],
         "amount": data_tup[5]
     }
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    conn = create_connection("database.db")
+
+    if form.validate_on_submit():
+        user = select_user_by_username(conn, form.username.data)
+        if user:
+            if user[4] == form.password.data:
+                session['uid'] = user[0]
+                return redirect(url_for('homepage', uid=session['uid']))
+
+        return "<h1>Invalid username or password</h1>"
+
+    return render_template("login.html", form=form)
+
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    form = RegisterForm()
+
+    # if form.validate_on_submit():
+    #     new_user = User(name=form.name.data, username=form.username.data,
+    #                     email=form.email.data, password=form.password.data)
+    #     db.session.add(new_user)
+    #     db.session.commit()
+    #     return redirect(url_for('login'))
+
+    return render_template("signup.html", form=form)
 
 
 @app.route("/user/<uid>")
@@ -46,7 +82,7 @@ def homepage(uid):
         "Technology": total_category_exp[7],
         "School": total_category_exp[8],
     }
-    
+
     return render_template("home.html", user_expenses=user_expenses, total_expense=str(total_expense), data=pie_data)
 
 

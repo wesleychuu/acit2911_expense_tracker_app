@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def insert_user(conn, name: str, username: str, email: str, password: str) -> int:
     """
     Create user and insert into the users table
@@ -16,10 +17,11 @@ def insert_user(conn, name: str, username: str, email: str, password: str) -> in
     """
     sql = ''' INSERT INTO users(name,username,email,password) VALUES(?,?,?,?) '''
     cur = conn.cursor()
-    cur.executemany(sql, (name,username,email,password,))
+    cur.executemany(sql, (name, username, email, password,))
     conn.commit()
 
     return cur.lastrowid
+
 
 def select_all_users(conn) -> list:
     """
@@ -27,7 +29,7 @@ def select_all_users(conn) -> list:
 
     Parameters: 
         conn: the Connection object
-    
+
     Return:
         list of all users as tuples
     """
@@ -44,7 +46,7 @@ def select_user_by_id(conn, uid: str) -> tuple:
     Parameters: 
         conn:       the Connection object
         uid (int):  id of user to find
-    
+
     Return:
         a user and their information as a tuple
     """
@@ -52,6 +54,7 @@ def select_user_by_id(conn, uid: str) -> tuple:
     cur.execute("SELECT * FROM users WHERE id=?", (uid,))
 
     return cur.fetchone()
+
 
 def delete_user_by_id(conn, uid: int):
     """
@@ -64,3 +67,17 @@ def delete_user_by_id(conn, uid: int):
     cur = conn.cursor()
     cur.execute("DELETE FROM users WHERE id=?", (uid,))
     conn.commit()
+
+
+def select_user_by_username(conn, username):
+    """
+    Query a user by username
+
+    Parameters: 
+        conn:       the Connection object
+        username:   username of user to find
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE username=?", (username,))
+
+    return cur.fetchone()
