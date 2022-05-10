@@ -81,3 +81,17 @@ def select_user_by_username(conn, username):
     cur.execute("SELECT * FROM users WHERE username=?", (username,))
 
     return cur.fetchone()
+
+
+def select_user_by_email(conn, email: str) -> tuple:
+    """
+    Query a user by email
+
+    Parameters: 
+        conn:   the Connection object
+        email:  username of user to find
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE email=?", (email,))
+
+    return cur.fetchone()

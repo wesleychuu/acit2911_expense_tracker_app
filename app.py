@@ -1,6 +1,6 @@
 import sqlite3
 from flask_bootstrap import Bootstrap
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from modules.expense_module import *
 from modules.user_module import *
 from models.user import User
@@ -47,17 +47,32 @@ def signup():
 
     if form.validate_on_submit():
         conn = create_connection("database.db")
-        new_user = User(
-            name=form.name.data,
-            username=form.username.data,
-            email=form.email.data,
-            password=form.password.data,
-        )
-        insert_user(
-            conn, new_user.name, new_user.username, new_user.email, new_user.password
-        )
-        conn.close()
-        return redirect(url_for("login"))
+
+        existing_username = select_user_by_username(conn, form.username.data)
+        existing_email = select_user_by_email(conn, form.email.data)
+
+        # check if username is taken
+        # check if email taken
+        if existing_username:
+            flash("Username already taken")
+        elif existing_email:
+            flash("Email already registered")
+        else:
+            # create a new User to validate
+            new_user = User(
+                name=form.name.data,
+                username=form.username.data,
+                email=form.email.data,
+                password=form.password.data,
+            )
+
+            # insert user into db
+            insert_user(
+                conn, new_user.name, new_user.username, new_user.email, new_user.password
+            )
+
+            conn.close()
+            return redirect(url_for("login"))
 
     return render_template("signup.html", form=form)
 
@@ -70,12 +85,14 @@ def homepage(uid):
 
     total_category_exp = []
     for category in CATEGORIES:
-        total_category_exp.append(get_total_expenses_by_category(conn, uid, category))
+        total_category_exp.append(
+            get_total_expenses_by_category(conn, uid, category))
 
     total_expense = get_total_expenses(conn, uid)
     conn.close()
 
-    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
+    user_expenses = [data_to_dict(each_expense)
+                     for each_expense in tuple_expenses]
 
     pie_data = {
         "Category": "Amount",
@@ -110,7 +127,8 @@ def add_expense(uid):
     conn = create_connection("database.db")
 
     try:
-        ex1 = Expense(data["name"], data["date"], data["category"], data["amount"])
+        ex1 = Expense(data["name"], data["date"],
+                      data["category"], data["amount"])
         insert_expense(conn, uid, ex1.name, ex1.date, ex1.category, ex1.amount)
         return redirect(f"/user/{uid}"), 301
     except ValueError:
