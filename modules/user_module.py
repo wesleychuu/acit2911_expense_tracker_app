@@ -17,7 +17,7 @@ def insert_user(conn, name: str, username: str, email: str, password: str) -> in
     """
     sql = ''' INSERT INTO users(name,username,email,password) VALUES(?,?,?,?) '''
     cur = conn.cursor()
-    cur.executemany(sql, (name, username, email, password,))
+    cur.execute(sql, (name, username, email, password,))
     conn.commit()
 
     return cur.lastrowid
