@@ -70,8 +70,7 @@
                     <span id="edit-expense"><a
                             href="{{ url_for('get_expense', eid=user_expenses.index(user_expense)+1, uid=session.get('uid')) }}"><i
                                 class="fa fa-pencil-square" aria-hidden="true"></i></a></span>
-                    <span id="delete-expense"><a
-                            href="{{ url_for('delete_expense', eid=user_expenses.index(user_expense)+1, uid=session.get('uid')) }}"><i
+                    <span id="delete-expense"><a href="{{ url_for('homepage', uid=session.get('uid')) }}"><i
                                 class="fa fa-trash" aria-hidden="true"></i></a></span>
                 </div>
             </td>
