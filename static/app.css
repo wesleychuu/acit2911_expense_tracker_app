@@ -67,8 +67,8 @@ a:hover {
 
 @media screen and (min-width: 600px) {
     html {
-        width: 600px;
+        width: max-content;
         margin: auto;
-        overflow: hidden;
+        overflow-x: hidden;
     }
 }
