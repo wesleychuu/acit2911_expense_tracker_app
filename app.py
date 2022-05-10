@@ -117,7 +117,7 @@ def get_expense(uid, eid):
 
     try:
         expense = select_one_expense(conn, eid=eid, uid=uid)
-        return str(expense), 201
+        return render_template("edit_expense.html", expense=expense, uid=uid), 201
     except ValueError:
         return "", 400
     finally:
