@@ -3,6 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, request, redirect, url_for, session
 from modules.expense_module import *
 from modules.user_module import *
+from models.user import User
 from models.login_form import LoginForm
 from models.register_form import RegisterForm
 from sql_db import create_connection
@@ -43,12 +44,13 @@ def login():
 def signup():
     form = RegisterForm()
 
-    # if form.validate_on_submit():
-    #     new_user = User(name=form.name.data, username=form.username.data,
-    #                     email=form.email.data, password=form.password.data)
-    #     db.session.add(new_user)
-    #     db.session.commit()
-    #     return redirect(url_for('login'))
+    if form.validate_on_submit():
+        conn = create_connection("database.db")
+        new_user = User(name=form.name.data, username=form.username.data,
+                        email=form.email.data, password=form.password.data)
+        insert_user(conn, new_user.name, new_user.username, new_user.email, new_user.password)
+        conn.close()
+        return redirect(url_for('login'))
 
     return render_template("signup.html", form=form)
 
