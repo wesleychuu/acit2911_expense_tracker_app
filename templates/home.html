@@ -67,11 +67,12 @@
             <td class="expense-amount">
                 ${{ user_expense.amount }}
                 <div class="home-icons">
-                    <span id="edit-expense"><a
-                            href="{{ url_for('get_expense', eid=user_expenses.index(user_expense)+1, uid=session.get('uid')) }}"><i
+                    <span id="{{ user_expenses.index(user_expense)+1 }}"><a
+                            href="{{ url_for('get_expense', eid=user_expense.eid, uid=session.get('uid')) }}"><i
                                 class="fa fa-pencil-square" aria-hidden="true"></i></a></span>
-                    <span id="delete-expense"><a href="{{ url_for('homepage', uid=session.get('uid')) }}"><i
-                                class="fa fa-trash" aria-hidden="true"></i></a></span>
+                    <span id="{{ user_expenses.index(user_expense)+1 }}"><a
+                            href="{{ url_for('homepage', uid=session.get('uid')) }}"><i class="fa fa-trash"
+                                aria-hidden="true"></i></a></span>
                 </div>
             </td>
         </tr>
