@@ -1,0 +1,45 @@
+{% extends 'app.html' %}
+
+
+{% block title %} Edit Expense {% endblock %}
+{% block heading1 %} Edit Expense {% endblock %}
+
+{% block main_content %}
+<section id="form">
+
+    <form class="myForm" method="post">
+        <div class="expense title">
+            <input type="text" name="name" placeholder="Title of Expense" value="{{ expense[2] }}" required>
+        </div>
+        <br>
+        <div><select name="category" id="type">
+                <option value="{{ expense[4] }}">{{ expense[4] }}</option>
+                <option value="Food">Food</option>
+                <option value="Apparel">Apparel</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Lifestyle">Lifestyle</option>
+                <option value="Miscellaneous">Miscellaneious</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Services">Services</option>
+                <option value="Technology">Technology</option>
+                <option value="School">School</option>
+            </select></div>
+
+        <br>
+
+        <div class="expense cost">
+            <input type="cost" name="amount" placeholder="Cost" value="{{ expense[5] }}" required>
+        </div>
+        <br>
+        <div class="expense date">
+            <input type="date" name="date" id="date" placeholder="dd-mm-yyyy" value="{{ expense[3] }}" min="1997-01-01"
+                max="2030-12-31" required>
+        </div>
+        <br>
+        <div>
+            <button type="submit" id="frm-btn">Save</button>
+            <button type="clear" id="frm-btn">Cancel</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
