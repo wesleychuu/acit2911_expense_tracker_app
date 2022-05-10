@@ -83,3 +83,11 @@ a:hover {
 .link {
     margin-bottom: 1rem;
 }
+
+.message {
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 95%;
+    z-index: 2;
+}
