@@ -28,7 +28,6 @@ th {
 th,
 td {
     border: solid black 1px;
-    padding: 5px 1px 5px 1px;
 }
 
 .pie-chart-display {
@@ -39,4 +38,23 @@ td {
 
 td {
     background-color: #cac8c6;
+}
+
+.expense-amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-icons {
+    display: flex;
+    flex-direction: column;
+    line-height: 0;
+}
+
+.fa-pencil-square,
+.fa-trash {
+    font-size: 1.5rem;
+    color: var(--content-txt);
+    cursor: pointer;
 }
