@@ -8,6 +8,7 @@ from models.login_form import LoginForm
 from models.register_form import RegisterForm
 from sql_db import create_connection
 from models.expense import CATEGORIES, Expense
+import hashlib
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Thisisspposedtobesecret"
@@ -31,7 +32,7 @@ def login():
     if form.validate_on_submit():
         user = select_user_by_username(conn, form.username.data)
         if user:
-            if user[4] == form.password.data:
+            if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
                 session["uid"] = user[0]
                 return redirect(url_for("homepage", uid=session["uid"]))
 
@@ -46,11 +47,17 @@ def signup():
 
     if form.validate_on_submit():
         conn = create_connection("database.db")
-        new_user = User(name=form.name.data, username=form.username.data,
-                        email=form.email.data, password=form.password.data)
-        insert_user(conn, new_user.name, new_user.username, new_user.email, new_user.password)
+        new_user = User(
+            name=form.name.data,
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data,
+        )
+        insert_user(
+            conn, new_user.name, new_user.username, new_user.email, new_user.password
+        )
         conn.close()
-        return redirect(url_for('login'))
+        return redirect(url_for("login"))
 
     return render_template("signup.html", form=form)
 
