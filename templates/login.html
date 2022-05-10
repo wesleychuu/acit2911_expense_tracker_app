@@ -5,8 +5,7 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('.static', filename='login.css')}}">
-<link rel="stylesheet" href="{{url_for('.static', filename='app.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='login-register.css')}}">
 {% endblock %}
 
 {% block content %}
@@ -18,8 +17,13 @@
         {{ wtf.form_field(form.username) }}
         {{ wtf.form_field(form.password) }}
         {{ wtf.form_field(form.remember) }}
-        <button class="btn btn-lg btn-primary btn-block signin-btn" type="submit">Sign in</button>
-        <a class="forgot">Forgot password?</a>
+        <button class="btn btn-lg btn-primary btn-block submit-btn" type="submit">Sign in</button>
+        <div class="link">
+          <a href="{{ url_for('signup') }}">Don't have an account?</a>
+        </div>
+        <div class="link">
+          <a class="forgot">Forgot password?</a>
+        </div>
       </form>
 
     </div> <!-- /container -->
