@@ -1,8 +1,8 @@
 from models.expense import Expense
+import hashlib
 
 
 class User:
-
     def __init__(self, name, username, email, password):
         if type(name) is not str:
             raise TypeError
@@ -34,7 +34,8 @@ class User:
         self.name = name
         self.username = username
         self.email = email
-        self.password = password
+        self.password = str(hashlib.sha256(password.encode()).hexdigest())
+
     #     self.expenses = expenses
 
     # def add_expense(self, expense: Expense):
