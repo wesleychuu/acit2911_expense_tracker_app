@@ -6,7 +6,7 @@ from modules.user_module import *
 from models.login_form import LoginForm
 from models.register_form import RegisterForm
 from sql_db import create_connection
-from models.expense import CATEGORIES
+from models.expense import CATEGORIES, Expense
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Thisisspposedtobesecret"
@@ -18,7 +18,7 @@ def data_to_dict(data_tup: tuple) -> dict:
         "name": data_tup[2],
         "date": data_tup[3],
         "category": data_tup[4],
-        "amount": data_tup[5]
+        "amount": data_tup[5],
     }
 
 
@@ -31,8 +31,8 @@ def login():
         user = select_user_by_username(conn, form.username.data)
         if user:
             if user[4] == form.password.data:
-                session['uid'] = user[0]
-                return redirect(url_for('homepage', uid=session['uid']))
+                session["uid"] = user[0]
+                return redirect(url_for("homepage", uid=session["uid"]))
 
         return "<h1>Invalid username or password</h1>"
 
@@ -61,17 +61,15 @@ def homepage(uid):
 
     total_category_exp = []
     for category in CATEGORIES:
-        total_category_exp.append(
-            get_total_expenses_by_category(conn, uid, category))
+        total_category_exp.append(get_total_expenses_by_category(conn, uid, category))
 
     total_expense = get_total_expenses(conn, uid)
     conn.close()
 
-    user_expenses = [data_to_dict(each_expense)
-                     for each_expense in tuple_expenses]
+    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
 
     pie_data = {
-        'Category': 'Amount',
+        "Category": "Amount",
         "Food": total_category_exp[0],
         "Apparel": total_category_exp[1],
         "Entertainment": total_category_exp[2],
@@ -83,7 +81,12 @@ def homepage(uid):
         "School": total_category_exp[8],
     }
 
-    return render_template("home.html", user_expenses=user_expenses, total_expense=str(total_expense), data=pie_data)
+    return render_template(
+        "home.html",
+        user_expenses=user_expenses,
+        total_expense=str(total_expense),
+        data=pie_data,
+    )
 
 
 @app.route("/user/<uid>/add", methods=["GET"])
@@ -93,15 +96,14 @@ def load_add_page(uid):
 
 @app.route("/user/<uid>/add", methods=["POST"])
 def add_expense(uid):
-    """Adds an expense under the user's ID
-    """
+    """Adds an expense under the user's ID"""
     data = request.form
     conn = create_connection("database.db")
 
     try:
-        insert_expense(
-            conn, uid, data["name"], data["date"], data["category"], data["amount"])
-        return redirect(f'/user/{uid}'), 301
+        ex1 = Expense(data["name"], data["date"], data["category"], data["amount"])
+        insert_expense(conn, uid, ex1.name, ex1.date, ex1.category, ex1.amount)
+        return redirect(f"/user/{uid}"), 301
     except ValueError:
         return "", 400
     finally:
