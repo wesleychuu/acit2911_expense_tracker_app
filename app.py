@@ -22,7 +22,7 @@ def data_to_dict(data_tup: tuple) -> dict:
         "date": data_tup[3],
         "category": data_tup[4],
         "amount": data_tup[5],
-        "eid": data_tup[0]
+        "eid": data_tup[0],
     }
 
 
@@ -33,7 +33,9 @@ def login():
 
     if form.validate_on_submit():
         user = select_user_by_username(conn, form.username.data)
-        if not user or user[4] != str(hashlib.sha256(form.password.data.encode()).hexdigest()):
+        if not user or user[4] != str(
+            hashlib.sha256(form.password.data.encode()).hexdigest()
+        ):
             flash("Inccorrect username or password", category="alert-warning")
         else:
             if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
@@ -70,11 +72,17 @@ def signup():
 
             # insert user into db
             insert_user(
-                conn, new_user.name, new_user.username, new_user.email, new_user.password
+                conn,
+                new_user.name,
+                new_user.username,
+                new_user.email,
+                new_user.password,
             )
 
             conn.close()
-            flash("Great success! New account has been created.", category="alert-success")
+            flash(
+                "Great success! New account has been created.", category="alert-success"
+            )
             return redirect(url_for("login"))
 
     return render_template("signup.html", form=form), 200
@@ -89,13 +97,13 @@ def homepage():
     total_category_exp = []
     for category in CATEGORIES:
         total_category_exp.append(
-            get_total_expenses_by_category(conn, session["uid"], category))
+            get_total_expenses_by_category(conn, session["uid"], category)
+        )
 
     total_expense = get_total_expenses(conn, session["uid"])
     conn.close()
 
-    user_expenses = [data_to_dict(each_expense)
-                     for each_expense in tuple_expenses]
+    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
 
     pie_data = {
         "Category": "Amount",
@@ -115,19 +123,22 @@ def homepage():
         data = request.form
         eid = data["expense_to_delete"]
         try:
-            delete_one_expense(conn, eid, session['uid'])
+            delete_one_expense(conn, eid, session["uid"])
             return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
         finally:
             conn.close()
 
-    return render_template(
-        "home.html",
-        user_expenses=user_expenses,
-        total_expense=str(total_expense),
-        data=pie_data,
-    ) , 200
+    return (
+        render_template(
+            "home.html",
+            user_expenses=user_expenses,
+            total_expense=str(total_expense),
+            data=pie_data,
+        ),
+        200,
+    )
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -138,14 +149,18 @@ def add_page():
 
     if request.method == "POST":
         try:
-            ex1 = Expense(data["name"], data["date"], data["category"], float(data["amount"]))
-            insert_expense(conn, session["uid"], ex1.name, ex1.date, ex1.category, ex1.amount)
+            ex1 = Expense(
+                data["name"], data["date"], data["category"], float(data["amount"])
+            )
+            insert_expense(
+                conn, session["uid"], ex1.name, ex1.date, ex1.category, ex1.amount
+            )
             return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
         finally:
             conn.close()
-    
+
     return render_template("add_expense.html"), 200
 
 
@@ -162,17 +177,23 @@ def get_expense(eid):
             return "", 400
         finally:
             conn.close()
-    
-    return render_template("edit_expense.html", expense=expense, uid=session["uid"]), 200
+
+    return (
+        render_template("edit_expense.html", expense=expense, uid=session["uid"]),
+        200,
+    )
 
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
     conn = create_connection("database.db")
-    name = select_user_by_id(conn, (session['uid']))[1]
-    username = select_user_by_id(conn, (session['uid']))[2]
-    email = select_user_by_id(conn, (session['uid']))[3]
-    return render_template("profile.html", name=name, username=username, email=email), 200
+    name = select_user_by_id(conn, (session["uid"]))[1]
+    username = select_user_by_id(conn, (session["uid"]))[2]
+    email = select_user_by_id(conn, (session["uid"]))[3]
+    return (
+        render_template("profile.html", name=name, username=username, email=email),
+        200,
+    )
 
 
 @app.route("/profile/edit", methods=["GET", "POST"])
@@ -188,19 +209,31 @@ def reset_password():
 
     if request.method == "POST":
         if form.validate_on_submit():
-            user = select_user_by_id(conn, session['uid'])
-            if user[4] == str(hashlib.sha256(form.old_password.data.encode()).hexdigest()):
+            user = select_user_by_id(conn, session["uid"])
+            if user[4] == str(
+                hashlib.sha256(form.old_password.data.encode()).hexdigest()
+            ):
                 try:
-                    update_password(conn, session['uid'], str(hashlib.sha256(form.new_password.data.encode()).hexdigest()))
-                    session['uid'] = None
-                    flash("Great success! Password was reset, please log in again.", category="alert-success")
+                    update_password(
+                        conn,
+                        session["uid"],
+                        str(
+                            hashlib.sha256(form.new_password.data.encode()).hexdigest()
+                        ),
+                    )
+                    session["uid"] = None
+                    flash(
+                        "Great success! Password was reset, please log in again.",
+                        category="alert-success",
+                    )
                     return redirect("/"), 301
                 except ValueError:
                     return "", 400
                 finally:
                     conn.close()
-    
-    return render_template("reset_password.html", form=form, uid=session['uid']), 200
+
+    return render_template("reset_password.html", form=form, uid=session["uid"]), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
