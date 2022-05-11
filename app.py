@@ -33,12 +33,12 @@ def login():
 
     if form.validate_on_submit():
         user = select_user_by_username(conn, form.username.data)
-        if user:
+        if not user or user[4] != str(hashlib.sha256(form.password.data.encode()).hexdigest()):
+            flash("Inccorrect username or password")
+        else:
             if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
                 session["uid"] = user[0]
                 return redirect(url_for("homepage")), 301
-
-        return "<h1>Invalid username or password</h1>"
 
     return render_template("login.html", form=form)
 
