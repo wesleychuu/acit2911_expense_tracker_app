@@ -81,5 +81,25 @@ def test_profile(client):
     assert client.get("/profile").status_code == 200
 
 
+def test_profile_edit(client):
+    assert (
+        client.post(
+            "/profile/edit",
+            data={
+                "name": "myname name",
+                "username": "myname123",
+                "email": "balls@gmail.com",
+            },
+        ).status_code
+        == 200
+    )
+
+
 def test_reset_password(client):
-    pass
+    assert (
+        client.post(
+            "/profile/resetpassword",
+            data={"old_password": "Oldpass123!", "new_password": "Newpass123!"},
+        ).status_code
+        == 200
+    )
