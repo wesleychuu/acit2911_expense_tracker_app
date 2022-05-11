@@ -1,0 +1,26 @@
+{% extends 'app.html' %}
+
+{% block title %} Edit Profile {% endblock %}
+{% block heading1 %} Edit Profile {% endblock %}
+
+{% block main_content %}
+
+<form class="editProfileForm" method="post">
+    <div class="edit name">
+      <input type="text" name="name" placeholder="Name">
+    </div>
+    <br>
+    <div class="edit username">
+        <input type="text" username="username" placeholder="Username">
+    </div>
+    <br>
+      <div class="edit email">
+        <input type="text" email="email" placeholder="Email">
+    </div>
+    <br>
+
+    <button class="btn btn-lg btn-primary btn-block submit-btn" type="submit">Save</button>
+    <button class="btn btn-lg btn-primary btn-block submit-btn" type="button" onclick="window.history.back();">Cancel</button>
+    
+    
+{% endblock %}
