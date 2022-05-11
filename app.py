@@ -116,7 +116,6 @@ def homepage():
         eid = data["expense_to_delete"]
         try:
             delete_one_expense(conn, eid, session['uid'])
-            flash("Expense removed successfully", category="alert-success")
             return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
@@ -141,7 +140,6 @@ def add_page():
         try:
             ex1 = Expense(data["name"], data["date"], data["category"], float(data["amount"]))
             insert_expense(conn, session["uid"], ex1.name, ex1.date, ex1.category, ex1.amount)
-            flash("Expense added successfully", category="alert-success")
             return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
