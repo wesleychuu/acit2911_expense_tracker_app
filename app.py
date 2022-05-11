@@ -54,7 +54,7 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@app.route("/user/<uid>", methods=["GET", "DELETE"])
+@app.route("/user/<uid>", methods=["GET"])
 def homepage(uid):
     """Render the homepage of a user -- shows their expenses"""
     conn = create_connection("database.db")
@@ -117,7 +117,7 @@ def get_expense(uid, eid):
     conn = create_connection("database.db")
 
     try:
-        expense = select_one_expense(conn, eid=eid, uid=uid)
+        expense = select_one_expense(conn, eid, uid)
         return render_template("edit_expense.html", expense=expense, uid=uid), 201
     except ValueError:
         return "", 400
@@ -126,13 +126,14 @@ def get_expense(uid, eid):
 
 
 @app.route("/user/<uid>/<eid>", methods=["DELETE"])
-def delete_expense(eid, uid):
+def delete_expense(uid, eid):
     """Delete an expense by its id"""
     conn = create_connection("database.db")
 
     try:
         delete_one_expense(conn, eid, uid)
         return "", 201
+        # redirect(url_for('homepage'), uid=uid)
     except ValueError:
         return "", 400
     finally:
