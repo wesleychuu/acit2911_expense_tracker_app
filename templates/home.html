@@ -64,8 +64,16 @@
             <td>
                 {{ user_expense.category }}
             </td>
-            <td>
+            <td class="expense-amount">
                 ${{ user_expense.amount }}
+                <div class="home-icons">
+                    <span id="{{ user_expenses.index(user_expense)+1 }}"><a
+                            href="{{ url_for('get_expense', eid=user_expense.eid, uid=session.get('uid')) }}"><i
+                                class="fa fa-pencil-square" aria-hidden="true"></i></a></span>
+                    <span id="{{ user_expenses.index(user_expense)+1 }}"><a href="#"><i class="fa fa-trash"
+                                aria-hidden="true"></i></a></span>
+                    <!-- {{ url_for('delete_expense', eid=user_expense.eid, uid=session.get('uid')) }} -->
+                </div>
             </td>
         </tr>
         {% endfor %}

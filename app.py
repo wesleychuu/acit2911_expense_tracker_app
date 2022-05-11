@@ -21,6 +21,7 @@ def data_to_dict(data_tup: tuple) -> dict:
         "date": data_tup[3],
         "category": data_tup[4],
         "amount": data_tup[5],
+        "eid": data_tup[0]
     }
 
 
@@ -77,7 +78,7 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@app.route("/user/<uid>")
+@app.route("/user/<uid>", methods=["GET"])
 def homepage(uid):
     """Render the homepage of a user -- shows their expenses"""
     conn = create_connection("database.db")
@@ -143,22 +144,23 @@ def get_expense(uid, eid):
     conn = create_connection("database.db")
 
     try:
-        expense = select_one_expense(conn, eid=eid, uid=uid)
-        return str(expense), 201
+        expense = select_one_expense(conn, eid, uid)
+        return render_template("edit_expense.html", expense=expense, uid=uid), 201
     except ValueError:
         return "", 400
     finally:
         conn.close()
 
 
-@app.route("/user/<uid>/edit/<eid>", methods=["DELETE"])
-def delete_expense(eid, uid):
+@app.route("/user/<uid>/<eid>", methods=["DELETE"])
+def delete_expense(uid, eid):
     """Delete an expense by its id"""
     conn = create_connection("database.db")
 
     try:
         delete_one_expense(conn, eid, uid)
         return "", 201
+        # redirect(url_for('homepage'), uid=uid)
     except ValueError:
         return "", 400
     finally:
