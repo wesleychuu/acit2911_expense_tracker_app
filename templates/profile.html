@@ -1,0 +1,26 @@
+{% extends 'app.html' %}
+
+{% block title %} Profile {% endblock %}
+{% block heading1 %} Profile {% endblock %}
+
+{% block main_content %}
+
+    <p>{{ username }}</p>
+    <p>{{ name }}</p>
+    <p>{{ email }}</p>
+
+    <br>
+    <div>
+      <button type="button" id="frm-btn">Edit Profile</button>
+    </div>
+    <br>
+    <div>
+      <button type="button" id="frm-btn">Reset Password</button>
+    </div>
+    <br>
+    <div>
+        <button type="button" id="frm-btn">Delete Account</button>
+      </div>
+  </form>
+
+{% endblock %}
