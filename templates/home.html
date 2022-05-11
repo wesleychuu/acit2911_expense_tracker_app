@@ -47,12 +47,14 @@
 <section class="expense-cards">
     <!-- List of current existing user expenses -->
     <table>
-        <tr>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Amount</th>
-        </tr>
+        {% if user_expense|length > 0 %}
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Amount</th>
+            </tr>
+        {% endif %}
         {% for user_expense in user_expenses %}
         <tr>
             <td>
