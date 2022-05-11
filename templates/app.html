@@ -30,10 +30,10 @@
 
     <footer>
         <nav>
-            <span class="icons" id="go-home"><a href="{{ url_for('homepage', uid=session.get('uid')) }}"><i class="fa fa-home"
+            <span class="icons" id="go-home"><a href="{{ url_for('homepage') }}"><i class="fa fa-home"
                         aria-hidden="true"></i></a></span>
             <span class="icons" id="go-search"><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></span>
-            <span class="icons" id="go-add"><a href="{{ url_for('add_page', uid=session.get('uid')) }}"><i class="fa fa-plus"
+            <span class="icons" id="go-add"><a href="{{ url_for('add_page') }}"><i class="fa fa-plus"
                         aria-hidden="true"></i></a></span>
             <span class="icons" id="go-user"><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></span>
         </nav>

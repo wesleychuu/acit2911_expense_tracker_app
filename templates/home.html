@@ -70,15 +70,14 @@
                 ${{ user_expense.amount }}
                 <div class="home-icons">
                     <span id="{{ user_expense.eid }}">
-                        <a href="{{ url_for('get_expense', eid=user_expense.eid, uid=session.get('uid')) }}">
+                        <a href="{{ url_for('get_expense', eid=user_expense.eid) }}">
                             <i class="fa fa-pencil-square" aria-hidden="true"></i>
                         </a>
                     </span>
-                    <form action="/user/<uid>" method="POST">
+                    <form action="/home" method="POST">
                         <input type=hidden value="{{ user_expense.eid }}" name=expense_to_delete />
                         <button type="submit" class="btn"><i class="fa fa-trash"aria-hidden="true"></i></button>
                     </form>
-                    <!-- {{ url_for('delete_expense', eid=user_expense.eid, uid=session.get('uid')) }} -->
                 </div>
             </td>
         </tr>
