@@ -34,7 +34,7 @@ def login():
     if form.validate_on_submit():
         user = select_user_by_username(conn, form.username.data)
         if not user or user[4] != str(hashlib.sha256(form.password.data.encode()).hexdigest()):
-            flash("Inccorrect username or password")
+            flash("Inccorrect username or password", category="alert-warning")
         else:
             if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
                 session["uid"] = user[0]
@@ -56,9 +56,9 @@ def signup():
         # check if username is taken
         # check if email taken
         if existing_username:
-            flash("Username already taken")
+            flash("Username already taken.")
         elif existing_email:
-            flash("Email already registered")
+            flash("Email already registered.")
         else:
             # create a new User to validate
             new_user = User(
@@ -74,6 +74,7 @@ def signup():
             )
 
             conn.close()
+            flash("Great success! New account has been created.", category="alert-success")
             return redirect(url_for("login"))
 
     return render_template("signup.html", form=form), 200
@@ -192,6 +193,7 @@ def reset_password():
                 try:
                     update_password(conn, session['uid'], str(hashlib.sha256(form.new_password.data.encode()).hexdigest()))
                     session['uid'] = None
+                    flash("Great success! Password was reset, please log in again.", category="alert-success")
                     return redirect("/"), 301
                 except ValueError:
                     return "", 400
