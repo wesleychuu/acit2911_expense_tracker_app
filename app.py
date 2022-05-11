@@ -1,4 +1,5 @@
 import sqlite3
+from urllib import response
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from modules.expense_module import *
@@ -78,7 +79,7 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@app.route("/user/<uid>", methods=["GET"])
+@app.route("/user/<uid>", methods=["GET", "POST"])
 def homepage(uid):
     """Render the homepage of a user -- shows their expenses"""
     conn = create_connection("database.db")
@@ -107,6 +108,18 @@ def homepage(uid):
         "Technology": total_category_exp[7],
         "School": total_category_exp[8],
     }
+
+    if request.method == "POST":
+        conn = create_connection("database.db")
+        data = request.form
+        eid = data["expense_to_delete"]
+        try:
+            delete_one_expense(conn, eid, session['uid'])
+            return redirect(f"/user/{session['uid']}"), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
 
     return render_template(
         "home.html",
@@ -152,13 +165,12 @@ def get_expense(uid, eid):
 
 @app.route("/user/<uid>/<eid>", methods=["DELETE"])
 def delete_expense(uid, eid):
-    """Delete an expense by its id"""
+    """Delete a user's expense by its id"""
     conn = create_connection("database.db")
 
     try:
         delete_one_expense(conn, eid, uid)
-        return "", 201
-        # redirect(url_for('homepage'), uid=uid)
+        return redirect(url_for('homepage'), uid=uid), 201
     except ValueError:
         return "", 400
     finally:
