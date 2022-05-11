@@ -95,3 +95,15 @@ def select_user_by_email(conn, email: str) -> tuple:
     cur.execute("SELECT * FROM users WHERE email=?", (email,))
 
     return cur.fetchone()
+
+def update_password(conn, uid: int, pwd: str) -> tuple:
+    """
+    Update a user's password
+    Parameters: 
+        conn:       the Connection object
+        uid (int):  id of user
+        pwd (str):  password to change to
+    """
+    cur = conn.cursor()
+    cur.execute("UPDATE users SET password=? WHERE id=?", (pwd, uid,))
+    conn.commit()

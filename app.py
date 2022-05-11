@@ -6,6 +6,7 @@ from modules.user_module import *
 from models.user import User
 from models.login_form import LoginForm
 from models.register_form import RegisterForm
+from models.reset_password import ResetPasswordForm
 from sql_db import create_connection
 from models.expense import CATEGORIES, Expense
 import hashlib
@@ -163,6 +164,32 @@ def get_expense(eid):
     
     return render_template("edit_expense.html", expense=expense, uid=session["uid"]), 201
 
+
+@app.route("/profile", methods=["GET"])
+def profile():
+    return render_template("profile.html"), 201
+
+
+@app.route("/profile/resetpassword", methods=["GET", "POST"])
+def reset_password():
+    """Delete a user's expense by its id"""
+    form = ResetPasswordForm()
+    conn = create_connection("database.db")
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            user = select_user_by_id(conn, session['uid'])
+            if user[4] == str(hashlib.sha256(form.old_password.data.encode()).hexdigest()):
+                try:
+                    update_password(conn, session['uid'], str(hashlib.sha256(form.new_password.data.encode()).hexdigest()))
+                    session['uid'] = None
+                    return redirect("/"), 301
+                except ValueError:
+                    return "", 400
+                finally:
+                    conn.close()
+    
+    return render_template("reset_password.html", form=form, uid=session['uid']), 201
 
 if __name__ == "__main__":
     app.run(debug=True)
