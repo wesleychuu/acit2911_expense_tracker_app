@@ -76,7 +76,7 @@ def signup():
             conn.close()
             return redirect(url_for("login"))
 
-    return render_template("signup.html", form=form)
+    return render_template("signup.html", form=form), 200
 
 
 @app.route("/home", methods=["GET", "POST"])
@@ -126,7 +126,7 @@ def homepage():
         user_expenses=user_expenses,
         total_expense=str(total_expense),
         data=pie_data,
-    )
+    ) , 200
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -145,7 +145,7 @@ def add_page():
         finally:
             conn.close()
     
-    return render_template("add_expense.html")
+    return render_template("add_expense.html"), 200
 
 
 @app.route("/edit/<eid>", methods=["GET", "POST"])
@@ -162,12 +162,17 @@ def get_expense(eid):
         finally:
             conn.close()
     
-    return render_template("edit_expense.html", expense=expense, uid=session["uid"]), 201
+    return render_template("edit_expense.html", expense=expense, uid=session["uid"]), 200
 
 
-@app.route("/profile", methods=["GET"])
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html"), 201
+    return render_template("profile.html"), 200
+
+
+@app.route("/profile/edit", methods=["GET", "POST"])
+def profile():
+    return render_template("edit_profile.html"), 200
 
 
 @app.route("/profile/resetpassword", methods=["GET", "POST"])
@@ -189,7 +194,7 @@ def reset_password():
                 finally:
                     conn.close()
     
-    return render_template("reset_password.html", form=form, uid=session['uid']), 201
+    return render_template("reset_password.html", form=form, uid=session['uid']), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
