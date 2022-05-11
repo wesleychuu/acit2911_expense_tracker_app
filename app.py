@@ -116,40 +116,38 @@ def homepage(uid):
     )
 
 
-@app.route("/user/<uid>/add", methods=["GET"])
-def load_add_page(uid):
-    return render_template("add_expense.html")
-
-
-@app.route("/user/<uid>/add", methods=["POST"])
-def add_expense(uid):
+@app.route("/user/<uid>/add", methods=["GET", "POST"])
+def add_page(uid):
     """Adds an expense under the user's ID"""
     data = request.form
     conn = create_connection("database.db")
 
-    try:
-        ex1 = Expense(data["name"], data["date"],
-                      data["category"], data["amount"])
-        insert_expense(conn, uid, ex1.name, ex1.date, ex1.category, ex1.amount)
-        return redirect(f"/user/{uid}"), 301
-    except ValueError:
-        return "", 400
-    finally:
-        conn.close()
+    if request.method == "POST":
+        try:
+            ex1 = Expense(data["name"], data["date"], data["category"], float(data["amount"]))
+            insert_expense(conn, uid, ex1.name, ex1.date, ex1.category, ex1.amount)
+            return redirect(f"/user/{uid}"), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
+    
+    return render_template("add_expense.html")
 
 
-@app.route("/user/<uid>/edit/<eid>", methods=["GET"])
+@app.route("/user/<uid>/edit/<eid>", methods=["GET", "PATCH"])
 def get_expense(uid, eid):
     """View an expense by user id and expense id for editing"""
     conn = create_connection("database.db")
 
     try:
         expense = select_one_expense(conn, eid, uid)
-        return render_template("edit_expense.html", expense=expense, uid=uid), 201
     except ValueError:
         return "", 400
     finally:
         conn.close()
+    
+    return render_template("edit_expense.html", expense=expense, uid=uid), 201
 
 
 @app.route("/user/<uid>/<eid>", methods=["DELETE"])
