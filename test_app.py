@@ -79,3 +79,7 @@ def test_get_expense(client):
 
 def test_profile(client):
     assert client.get("/profile").status_code == 200
+
+
+def test_reset_password(client):
+    pass
