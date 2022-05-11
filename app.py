@@ -167,11 +167,15 @@ def get_expense(eid):
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    return render_template("profile.html"), 200
+    conn = create_connection("database.db")
+    name = select_user_by_id(conn, (session['uid']))[1]
+    username = select_user_by_id(conn, (session['uid']))[2]
+    email = select_user_by_id(conn, (session['uid']))[3]
+    return render_template("profile.html", name=name, username=username, email=email), 200
 
 
 @app.route("/profile/edit", methods=["GET", "POST"])
-def profile():
+def profile_edit():
     return render_template("edit_profile.html"), 200
 
 
