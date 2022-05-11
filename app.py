@@ -1,5 +1,4 @@
 import sqlite3
-from urllib import response
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from modules.expense_module import *
@@ -26,7 +25,7 @@ def data_to_dict(data_tup: tuple) -> dict:
     }
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
     conn = create_connection("database.db")
@@ -36,7 +35,7 @@ def login():
         if user:
             if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
                 session["uid"] = user[0]
-                return redirect(url_for("homepage", uid=session["uid"]))
+                return redirect(url_for("homepage")), 301
 
         return "<h1>Invalid username or password</h1>"
 
@@ -79,18 +78,18 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@app.route("/user/<uid>", methods=["GET", "POST"])
-def homepage(uid):
+@app.route("/home", methods=["GET", "POST"])
+def homepage():
     """Render the homepage of a user -- shows their expenses"""
     conn = create_connection("database.db")
-    tuple_expenses = select_expenses_by_uid(conn, uid)
+    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
 
     total_category_exp = []
     for category in CATEGORIES:
         total_category_exp.append(
-            get_total_expenses_by_category(conn, uid, category))
+            get_total_expenses_by_category(conn, session["uid"], category))
 
-    total_expense = get_total_expenses(conn, uid)
+    total_expense = get_total_expenses(conn, session["uid"])
     conn.close()
 
     user_expenses = [data_to_dict(each_expense)
@@ -115,7 +114,7 @@ def homepage(uid):
         eid = data["expense_to_delete"]
         try:
             delete_one_expense(conn, eid, session['uid'])
-            return redirect(f"/user/{session['uid']}"), 301
+            return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
         finally:
@@ -129,8 +128,8 @@ def homepage(uid):
     )
 
 
-@app.route("/user/<uid>/add", methods=["GET", "POST"])
-def add_page(uid):
+@app.route("/add", methods=["GET", "POST"])
+def add_page():
     """Adds an expense under the user's ID"""
     data = request.form
     conn = create_connection("database.db")
@@ -138,8 +137,8 @@ def add_page(uid):
     if request.method == "POST":
         try:
             ex1 = Expense(data["name"], data["date"], data["category"], float(data["amount"]))
-            insert_expense(conn, uid, ex1.name, ex1.date, ex1.category, ex1.amount)
-            return redirect(f"/user/{uid}"), 301
+            insert_expense(conn, session["uid"], ex1.name, ex1.date, ex1.category, ex1.amount)
+            return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
         finally:
@@ -148,33 +147,21 @@ def add_page(uid):
     return render_template("add_expense.html")
 
 
-@app.route("/user/<uid>/edit/<eid>", methods=["GET", "PATCH"])
-def get_expense(uid, eid):
+@app.route("/edit/<eid>", methods=["GET", "POST"])
+def get_expense(eid):
     """View an expense by user id and expense id for editing"""
     conn = create_connection("database.db")
+    expense = select_one_expense(conn, eid, session["uid"])
 
-    try:
-        expense = select_one_expense(conn, eid, uid)
-    except ValueError:
-        return "", 400
-    finally:
-        conn.close()
+    if request.method == "POST":
+        try:
+            return redirect(url_for("homepage")), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
     
-    return render_template("edit_expense.html", expense=expense, uid=uid), 201
-
-
-@app.route("/user/<uid>/<eid>", methods=["DELETE"])
-def delete_expense(uid, eid):
-    """Delete a user's expense by its id"""
-    conn = create_connection("database.db")
-
-    try:
-        delete_one_expense(conn, eid, uid)
-        return redirect(url_for('homepage'), uid=uid), 201
-    except ValueError:
-        return "", 400
-    finally:
-        conn.close()
+    return render_template("edit_expense.html", expense=expense, uid=session["uid"]), 201
 
 
 if __name__ == "__main__":
