@@ -1,25 +1,37 @@
-{% extends 'app.html' %}
+{% extends "app.html" %}
+
+{% block css_linking %}
+<link href="/static/home.css" rel="stylesheet"> 
+{% endblock %}
 
 {% block title %} Edit Profile {% endblock %}
 {% block heading1 %} Edit Profile {% endblock %}
 
 {% block main_content %}
+<div class="message">
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-warning">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ message }}
+  </div>
+  {% endfor %}
+</div>
 
 <form class="editProfileForm" method="post">
     <div class="edit name">
-      <input type="text" name="name" placeholder="Name">
+      <input type="text" name="name" placeholder="Name" value="{{ name }}">
     </div>
     <br>
     <div class="edit username">
-        <input type="text" username="username" placeholder="Username">
+        <input type="text" name="username" placeholder="Username" value="{{ username }}">
     </div>
     <br>
       <div class="edit email">
-        <input type="text" email="email" placeholder="Email">
+        <input type="text" name="email" placeholder="Email" value="{{ email }}">
     </div>
     <br>
 
-    <button class="btn btn-lg btn-primary btn-block submit-btn" type="submit">Save</button>
+    <button class="btn btn-lg btn-success btn-block submit-btn" type="submit">Save</button>
     <button class="btn btn-lg btn-primary btn-block submit-btn" type="button" onclick="window.history.back();">Cancel</button>
     
     

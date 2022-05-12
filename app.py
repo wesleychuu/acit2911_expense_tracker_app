@@ -212,7 +212,27 @@ def profile():
 
 @app.route("/profile/edit", methods=["GET", "POST"])
 def profile_edit():
-    return render_template("edit_profile.html"), 200
+    conn = create_connection("database.db")
+    user = select_user_by_id(conn, session["uid"])
+    name = user[1]
+    username = user[2]
+    email = user[3]
+    conn.close()
+
+    if request.method == "POST":
+        conn = create_connection("database.db")
+        data = request.form
+        existing_username = select_user_by_username(conn, data["username"])
+        existing_email = select_user_by_email(conn, data["email"])
+
+        if existing_username and existing_username != user:
+            flash("Username already taken", category="alert-success")
+        elif existing_email and existing_email != user:
+            flash("Email already registered", category="alert-success")
+        else:
+            update_user(conn, session["uid"], data["name"], data["username"], data["email"])
+            return redirect("/profile"), 301
+    return render_template("edit_profile.html", name=name, username=username, email=email), 200
 
 
 @app.route("/profile/resetpassword", methods=["GET", "POST"])
