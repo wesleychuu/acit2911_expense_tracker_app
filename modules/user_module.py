@@ -99,6 +99,7 @@ def select_user_by_email(conn, email: str) -> tuple:
 def update_password(conn, uid: int, pwd: str) -> tuple:
     """
     Update a user's password
+
     Parameters: 
         conn:       the Connection object
         uid (int):  id of user
@@ -106,4 +107,19 @@ def update_password(conn, uid: int, pwd: str) -> tuple:
     """
     cur = conn.cursor()
     cur.execute("UPDATE users SET password=? WHERE id=?", (pwd, uid,))
+    conn.commit()
+
+def update_user(conn, uid: int, name: str, username: str, email:str):
+    """
+    Update a user's information
+
+    Parameters: 
+        conn:           the Connection object
+        uid (int):      id of user
+        name (str):     name to change to
+        username (str): name to change to
+        email (str):    name to change to
+    """
+    cur = conn.cursor()
+    cur.execute("UPDATE users SET name=?, username=?, email=? WHERE id=?", (name, username, email, uid,))
     conn.commit()
