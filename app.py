@@ -103,7 +103,8 @@ def homepage():
     total_expense = get_total_expenses(conn, session["uid"])
     conn.close()
 
-    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
+    user_expenses = [data_to_dict(each_expense)
+                     for each_expense in tuple_expenses]
 
     pie_data = {
         "Category": "Amount",
@@ -150,7 +151,8 @@ def add_page():
     if request.method == "POST":
         try:
             ex1 = Expense(
-                data["name"], data["date"], data["category"], float(data["amount"])
+                data["name"], data["date"], data["category"], float(
+                    data["amount"])
             )
             insert_expense(
                 conn, session["uid"], ex1.name, ex1.date, ex1.category, ex1.amount
@@ -179,7 +181,8 @@ def get_expense(eid):
             conn.close()
 
     return (
-        render_template("edit_expense.html", expense=expense, uid=session["uid"]),
+        render_template("edit_expense.html",
+                        expense=expense, uid=session["uid"]),
         200,
     )
 
@@ -197,17 +200,26 @@ def profile():
         try:
             delete_all_user_expense(conn, session["uid"])
             delete_user_by_id(conn, session["uid"])
-            flash("Account deleted -- Sorry to see you go :(", category="alert-success")
+            flash("Account deleted -- Sorry to see you go :(",
+                  category="alert-success")
             return redirect(url_for("login")), 301
         except ValueError:
             return "", 400
         finally:
             conn.close()
-    
+
     return (
-        render_template("profile.html", name=name, username=username, email=email),
+        render_template("profile.html", name=name,
+                        username=username, email=email),
         200,
     )
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session["uid"] = None
+    flash("You are logged out", category="alert-success")
+    return redirect(url_for("login"))
 
 
 @app.route("/profile/edit", methods=["GET", "POST"])
@@ -230,7 +242,8 @@ def profile_edit():
         elif existing_email and existing_email != user:
             flash("Email already registered", category="alert-success")
         else:
-            update_user(conn, session["uid"], data["name"], data["username"], data["email"])
+            update_user(conn, session["uid"], data["name"],
+                        data["username"], data["email"])
             return redirect("/profile"), 301
     return render_template("edit_profile.html", name=name, username=username, email=email), 200
 
@@ -252,7 +265,8 @@ def reset_password():
                         conn,
                         session["uid"],
                         str(
-                            hashlib.sha256(form.new_password.data.encode()).hexdigest()
+                            hashlib.sha256(
+                                form.new_password.data.encode()).hexdigest()
                         ),
                     )
                     session["uid"] = None
