@@ -15,25 +15,33 @@
 <h5><u>Email</u></h5>
 <p>{{ email }}</p>
 
-<br>
-<br>
+    <br>
 
-<div>
-  <a href="{{ url_for('profile_edit') }}">
-    <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn">Edit Profile</button>
-  </a>
-</div>
-<br>
-<div>
-  <a href="{{ url_for('reset_password') }}">
-    <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn">Reset Password</button>
-  </a>
-</div>
-<br>
-<div>
-  <form action="/profile" method="POST">
-    <input type=hidden value="" name=user_to_delete />
-    <button type="submit" class="btn btn-lg btn-danger btn-block submit-btn" id="frm-btn">Delete Account</button>
+    <div>
+      <form action="/logout" method="POST">
+        <input type=hidden value="" name=user_to_delete />
+        <button type="submit" class="btn btn-sm btn-primary btn-block submit-btn" id="frm-btn">Logout</button>
+      </form>
+    </div>
+    <br>
+    <div>
+      <a href="{{ url_for('profile_edit') }}">
+        <button type="button" class="btn btn-sm btn-primary btn-block submit-btn" id="frm-btn">Edit Profile</button>
+      </a>
+    </div>
+    <br>
+    <div>
+      <a href="{{ url_for('reset_password') }}">
+        <button type="button" class="btn btn-sm btn-primary btn-block submit-btn" id="frm-btn">Reset Password</button>
+      </a>
+    </div>
+    <br>
+    <div>
+      <form action="/profile" method="POST">
+        <input type=hidden value="" name=user_to_delete />
+        <button type="submit" class="btn btn-sm btn-danger btn-block submit-btn" id="frm-btn">Delete Account</button>
+      </form>
+    </div>
   </form>
 </div>
 </form>

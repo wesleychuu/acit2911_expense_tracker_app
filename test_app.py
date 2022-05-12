@@ -1,4 +1,4 @@
-from app import app
+from app import *
 import pytest
 import sqlite3
 import modules.user_module as user_module
@@ -14,6 +14,16 @@ def client():
         session["uid"] = "1"
 
     return client
+
+
+def test_data_to_dict():
+    assert data_to_dict(("1", "1", "Coffee", "2022-04-29", "Food", 4.5)) == {
+        "amount": 4.5,
+        "category": "Food",
+        "date": "2022-04-29",
+        "eid": "1",
+        "name": "Coffee",
+    }
 
 
 def test_signup(client):
@@ -59,6 +69,7 @@ def test_add_page(client):
         ).status_code
         == 301
     )
+    assert client.post("/add", data={"1": "2"}).status_code == 400
 
 
 def test_get_expense(client):
@@ -79,6 +90,7 @@ def test_get_expense(client):
 
 def test_profile(client):
     assert client.get("/profile").status_code == 200
+    # assert client.post("/profile").status_code == 301
 
 
 def test_profile_edit(client):
@@ -91,7 +103,7 @@ def test_profile_edit(client):
                 "email": "balls@gmail.com",
             },
         ).status_code
-        == 200
+        == 301
     )
 
 
