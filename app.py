@@ -190,6 +190,20 @@ def profile():
     name = select_user_by_id(conn, (session["uid"]))[1]
     username = select_user_by_id(conn, (session["uid"]))[2]
     email = select_user_by_id(conn, (session["uid"]))[3]
+    conn.close()
+
+    if request.method == "POST":
+        conn = create_connection("database.db")
+        try:
+            delete_all_user_expense(conn, session["uid"])
+            delete_user_by_id(conn, session["uid"])
+            flash("Account deleted -- Sorry to see you go :(", category="alert-success")
+            return redirect(url_for("login")), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
+    
     return (
         render_template("profile.html", name=name, username=username, email=email),
         200,
