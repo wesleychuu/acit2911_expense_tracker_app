@@ -196,3 +196,23 @@ def get_total_expenses(conn, uid: int) -> int:
         total += row[0]
 
     return float("{:.2f}".format(round(total, 2)))
+
+
+def update_expense(conn, eid: int, name: str, category: str, amount: str, date: str):
+    """
+    Update
+
+    Parameters:
+        conn:           the Connection object
+        eid (int):      the expense id
+        name (str):     name of the expense
+        category (str): category of the expense
+        amount (str):   amount of the expense
+        date (str):     date of the expense
+    """
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE expenses SET name=?, category=?, amount=?, date=? WHERE id=?",
+        (name, category, amount, date, eid,)
+    )
+    conn.commit()

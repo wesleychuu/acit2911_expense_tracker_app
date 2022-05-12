@@ -171,9 +171,14 @@ def get_expense(eid):
     """View an expense by user id and expense id for editing"""
     conn = create_connection("database.db")
     expense = select_one_expense(conn, eid, session["uid"])
+    conn.close()
 
     if request.method == "POST":
+        conn = create_connection("database.db")
+        data = request.form
         try:
+            update_expense(
+                conn, eid, data["name"], data["category"], data["amount"], data["date"])
             return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
