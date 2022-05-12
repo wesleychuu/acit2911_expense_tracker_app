@@ -22,13 +22,7 @@ class User:
         if type(password) is not str:
             raise TypeError
 
-        if len(password) < 8:
-            raise ValueError
-
-        if any(chr.isdigit() for chr in password) == False:
-            raise ValueError
-
-        if any(chr.isalpha() for chr in password) == False:
+        if any(chr.isdigit() for chr in password) == False or any(chr.isalpha() for chr in password) == False or len(password) < 8:
             raise ValueError
 
         self.name = name
