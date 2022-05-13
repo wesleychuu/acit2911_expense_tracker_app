@@ -1,7 +1,7 @@
 {% extends "app.html" %}
 
 {% block css_linking %}
-<link href="/static/home.css" rel="stylesheet"> 
+<link href="/static/input_styles.css" rel="stylesheet">
 {% endblock %}
 
 {% block title %} Edit Profile {% endblock %}
@@ -11,28 +11,32 @@
 <div class="message">
   {% for message in get_flashed_messages() %}
   <div class="alert alert-warning">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      {{ message }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
   </div>
   {% endfor %}
 </div>
 
 <form class="editProfileForm" method="post">
-    <div class="edit name">
-      <input type="text" name="name" placeholder="Name" value="{{ name }}" required>
-    </div>
-    <br>
-    <div class="edit username">
-        <input type="text" name="username" placeholder="Username" value="{{ username }}" required>
-    </div>
-    <br>
-      <div class="edit email">
-        <input type="text" name="email" placeholder="Email" value="{{ email }}" required>
-    </div>
-    <br>
+  <div class="edit name">
+    <h2>Name</h2>
+    <input type="text" name="name" placeholder="Name" value="{{ name }}" required>
+  </div>
+  <br>
+  <div class="edit username">
+    <h2>Username</h2>
+    <input type="text" name="username" placeholder="Username" value="{{ username }}" required>
+  </div>
+  <br>
+  <div class="edit email">
+    <h2>Email</h2>
+    <input type="text" name="email" placeholder="Email" value="{{ email }}" required>
+  </div>
+  <br>
 
-    <button class="btn btn-lg btn-success btn-block submit-btn" type="submit">Save</button>
-    <button class="btn btn-lg btn-primary btn-block submit-btn" type="button" onclick="window.history.back();">Cancel</button>
-    
-    
-{% endblock %}
+  <button class="btn btn-lg btn-success btn-block submit-btn" type="submit">Save</button>
+  <button class="btn btn-lg btn-primary btn-block submit-btn" type="button"
+    onclick="window.history.back();">Cancel</button>
+
+
+  {% endblock %}

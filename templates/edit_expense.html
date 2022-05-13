@@ -3,7 +3,8 @@
 
 {% block title %} Edit Expense {% endblock %}
 {% block heading1 %} Edit Expense {% endblock %}
-
+{% block css_linking %}
+<link href="/static/input_styles.css" rel="stylesheet"> {% endblock %}
 {% block main_content %}
 <section id="form">
 
@@ -38,7 +39,8 @@
         <br>
         <div>
             <button type="submit" class="btn btn-lg btn-success btn-block submit-btn" id="frm-btn">Save</button>
-            <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn" onclick="window.history.back();">Cancel</button>
+            <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn"
+                onclick="window.history.back();">Cancel</button>
         </div>
     </form>
 </section>
