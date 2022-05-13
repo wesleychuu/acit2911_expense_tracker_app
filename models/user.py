@@ -11,16 +11,12 @@ class User:
         ):
             raise TypeError
 
-        if len(username) < 5:
-            raise ValueError
-
-        if "@" not in email:
-            raise ValueError
-
         if (
             any(chr.isdigit() for chr in password) == False
             or any(chr.isalpha() for chr in password) == False
             or len(password) < 8
+            or len(username) < 5
+            or "@" not in email
         ):
             raise ValueError
 
