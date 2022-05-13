@@ -10,8 +10,8 @@
 {% block main_content %}
 <div class="message">
   {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
     {{ message }}
   </div>
   {% endfor %}
@@ -25,18 +25,17 @@
   <br>
   <div class="edit username">
     <h2>Username</h2>
-    <input type="text" name="username" placeholder="Username" value="{{ username }}" required>
+    <input type="text" name="username" placeholder="Username" value="{{ username }}" required minlength="5">
   </div>
   <br>
   <div class="edit email">
     <h2>Email</h2>
-    <input type="text" name="email" placeholder="Email" value="{{ email }}" required>
+    <input type="email" name="email" placeholder="Email" value="{{ email }}" required>
   </div>
   <br>
 
   <button class="btn btn-lg btn-success btn-block submit-btn" type="submit">Save</button>
-  <button class="btn btn-lg btn-primary btn-block submit-btn" type="button"
-    onclick="window.history.back();">Cancel</button>
+  <button class="btn btn-lg btn-primary btn-block submit-btn" type="button"><a href="{{ url_for('profile') }}">Cancel</a></button>
 
 
   {% endblock %}
