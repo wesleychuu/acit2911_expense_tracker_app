@@ -36,7 +36,7 @@ def login():
         if not user or user[4] != str(
             hashlib.sha256(form.password.data.encode()).hexdigest()
         ):
-            flash("Inccorrect username or password", category="alert-warning")
+            flash("Incorrect username or password", category="alert-warning")
         else:
             if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
                 session["uid"] = user[0]
@@ -246,6 +246,12 @@ def profile_edit():
             flash("Username already taken", category="alert-success")
         elif existing_email and existing_email != user:
             flash("Email already registered", category="alert-success")
+        elif len(data["username"]) < 5:
+            flash("Username too short", category="alert-success")
+        elif "@" not in data["email"]:
+            flash("Invalid email", category="alert-success")
+        elif "." not in data["email"]:
+            flash("Invalid email", category="alert-success")
         else:
             update_user(conn, session["uid"], data["name"],
                         data["username"], data["email"])
