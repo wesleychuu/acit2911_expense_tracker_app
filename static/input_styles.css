@@ -3,3 +3,7 @@ select {
     border: solid black 2px;
     border-radius: 4px;
 }
+
+a {
+    text-decoration: none;
+}
