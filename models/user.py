@@ -2,9 +2,13 @@ from models.expense import Expense
 
 
 class User:
-
     def __init__(self, name, username, email, password):
-        if type(name) is not str or type(username) is not str or type(email) is not str or type(password) is not str:
+        if (
+            type(name) is not str
+            or type(username) is not str
+            or type(email) is not str
+            or type(password) is not str
+        ):
             raise TypeError
 
         if len(username) < 5:
@@ -13,13 +17,18 @@ class User:
         if "@" not in email:
             raise ValueError
 
-        if any(chr.isdigit() for chr in password) == False or any(chr.isalpha() for chr in password) == False or len(password) < 8:
+        if (
+            any(chr.isdigit() for chr in password) == False
+            or any(chr.isalpha() for chr in password) == False
+            or len(password) < 8
+        ):
             raise ValueError
 
         self.name = name
         self.username = username
         self.email = email
         self.password = password
+
     #     self.expenses = expenses
 
     # def add_expense(self, expense: Expense):
