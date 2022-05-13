@@ -1,4 +1,5 @@
 from models.expense import Expense
+import hashlib
 
 
 class User:
@@ -23,7 +24,7 @@ class User:
         self.name = name
         self.username = username
         self.email = email
-        self.password = password
+        self.password = str(hashlib.sha256(password.encode()).hexdigest())
 
     #     self.expenses = expenses
 
