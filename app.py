@@ -104,8 +104,8 @@ def homepage():
     total_expense = get_total_expenses(conn, session["uid"])
     conn.close()
 
-    user_expenses = [data_to_dict(each_expense)
-                     for each_expense in tuple_expenses]
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses], 
+                            key=lambda d: d["date"], reverse=True)
 
     pie_data = {
         "Category": "Amount",
