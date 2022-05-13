@@ -4,23 +4,14 @@ from models.expense import Expense
 class User:
 
     def __init__(self, name, username, email, password):
-        if type(name) is not str:
-            raise TypeError
-
-        if type(username) is not str:
+        if type(name) is not str or type(username) is not str or type(email) is not str or type(password) is not str:
             raise TypeError
 
         if len(username) < 5:
             raise ValueError
 
-        if type(email) is not str:
-            raise TypeError
-
         if "@" not in email:
             raise ValueError
-
-        if type(password) is not str:
-            raise TypeError
 
         if any(chr.isdigit() for chr in password) == False or any(chr.isalpha() for chr in password) == False or len(password) < 8:
             raise ValueError
