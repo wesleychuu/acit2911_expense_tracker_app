@@ -6,6 +6,15 @@
 {% block css_linking %}
 <link href="/static/input_styles.css" rel="stylesheet"> {% endblock %}
 {% block main_content %}
+<div class="message">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+      {{ message }}
+    </div>
+    {% endfor %}
+</div>
+
 <section id="form">
 
     <form class="myForm" method="post">
@@ -29,7 +38,7 @@
         <br>
 
         <div class="expense cost">
-            <input type="cost" name="amount" placeholder="Cost" value="{{ expense[5] }}" required>
+            <input type="number" name="amount" placeholder="Cost" value="{{ expense[5] }}" required step="any" min="0">
         </div>
         <br>
         <div class="expense date">
@@ -39,8 +48,7 @@
         <br>
         <div>
             <button type="submit" class="btn btn-lg btn-success btn-block submit-btn" id="frm-btn">Save</button>
-            <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn"
-                onclick="window.history.back();">Cancel</button>
+            <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn"><a href="{{ url_for('homepage') }}">Cancel</a></button>
         </div>
     </form>
 </section>
