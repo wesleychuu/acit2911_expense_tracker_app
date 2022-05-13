@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -246,10 +247,10 @@ def profile_edit():
             flash("Username already taken", category="alert-success")
         elif existing_email and existing_email != user:
             flash("Email already registered", category="alert-success")
-        elif len(data["username"]) < 5:
-            flash("Username too short", category="alert-success")
-        elif "@" not in data["email"]:
-            flash("Invalid email", category="alert-success")
+        # elif len(data["username"]) < 5:
+        #     flash("Username too short", category="alert-success")
+        # elif "@" not in data["email"]:
+        #     flash("Invalid email", category="alert-success")
         elif "." not in data["email"]:
             flash("Invalid email", category="alert-success")
         else:
