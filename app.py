@@ -8,6 +8,7 @@ from models.user import User
 from models.login_form import LoginForm
 from models.register_form import RegisterForm
 from models.reset_password import ResetPasswordForm
+from models.search_form import SearchForm
 from sql_db import create_connection
 from models.expense import CATEGORIES, Expense
 import hashlib
@@ -104,8 +105,8 @@ def homepage():
     total_expense = get_total_expenses(conn, session["uid"])
     conn.close()
 
-    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses], 
-                            key=lambda d: d["date"], reverse=True)
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+                           key=lambda d: d["date"], reverse=True)
 
     pie_data = {
         "Category": "Amount",
@@ -293,6 +294,23 @@ def reset_password():
                     conn.close()
 
     return render_template("reset_password.html", form=form, uid=session["uid"]), 200
+
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    form = SearchForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            searched = form.searched.data
+            return render_template("search.html", form=form, searched=searched), 200
+
+    return render_template("search.html", form=form, categories=CATEGORIES), 200
+
+
+@app.route("/search/<category>", methods=["POST"])
+def search_category(category):
+    form = SearchForm()
+    return render_template("search.html", form=form, searched=category), 200
 
 
 if __name__ == "__main__":

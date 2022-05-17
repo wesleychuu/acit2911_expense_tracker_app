@@ -1,0 +1,44 @@
+{% extends 'app.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Search {% endblock %}
+{% block heading1 %} Search {% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='search.css')}}">
+{% endblock %}
+
+{% block main_content %}
+
+<div class="col container">
+    <br>
+    <div class="row">
+        <form class="search-bar" action="{{ url_for('search') }}" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="form-outline">
+                    <input type="search submit" id="searched" class="form-control" name="searched" placeholder="Search..." aria-label="Search" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <div class="row">
+        <h2>You searched for {{ searched }}</h2>
+        <table>
+            {% for c in categories %}
+            <tr>
+                <form action="{{ url_for('search_category', category=c) }}" method="POST">
+                    <input type=hidden value="{{ c }}" name=category />
+                    <button class="btn btn-primary btn-lg rounded-0 p-4" type="submit">{{ c }}</button>
+                </form>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <br>
+</div>
+
+
+{% endblock %}
