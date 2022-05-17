@@ -4,4 +4,5 @@ from wtforms.validators import InputRequired
 
 
 class SearchForm(FlaskForm):
-    searched = StringField(label="", render_kw={"placeholder": "Search"}, validators=[InputRequired()])
+    searched = StringField(
+        render_kw={"placeholder": "Search"}, validators=[InputRequired()])

@@ -11,12 +11,23 @@
 
 {% block main_content %}
 
-<form class="search-bar" action="{{ url_for('search') }}" method="POST">
-    {{ form.hidden_tag() }}
-    {{ wtf.form_field(form.searched) }}
-    <button type="submit" class="btn btn-outline-primary">Search</button>
-</form>
+<div class="col container">
+    <br>
+    <div class="row">
+        <form class="search-bar" action="{{ url_for('search') }}" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="form-outline">
+                    <input type="search submit" id="searched" class="form-control" name="searched" placeholder="Search..." aria-label="Search" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <div class="row">
+        <h2>You searched for {{ searched }}</h2>
+    </div>
+</div>
 
-<h2>You searched for {{ searched }}</h2>
 
 {% endblock %}
