@@ -8,6 +8,7 @@ from models.user import User
 from models.login_form import LoginForm
 from models.register_form import RegisterForm
 from models.reset_password import ResetPasswordForm
+from models.search_form import SearchForm
 from sql_db import create_connection
 from models.expense import CATEGORIES, Expense
 import hashlib
@@ -294,6 +295,14 @@ def reset_password():
 
     return render_template("reset_password.html", form=form, uid=session["uid"]), 200
 
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    form = SearchForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            searched = form.searched.data
+            return render_template("search.html", form=form, searched=searched), 200
+    return render_template("search.html", form=form), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
