@@ -2,29 +2,351 @@
     {
         "userid": 1,
         "name": "Coffee",
-        "date": "2022-04-29",
+        "date": "2022-01-02",
         "category": "Food",
         "amount": 4.50
     },
     {
         "userid": 1,
         "name": "Laptop",
-        "date": "2022-04-01",
+        "date": "2022-01-10",
         "category": "Technology",
         "amount": 1200.00
     },
     {
         "userid": 1,
         "name": "Movie",
-        "date": "2022-03-29",
+        "date": "2022-01-13",
         "category": "Entertainment",
         "amount": 12.75
     },
     {
-        "userid": 2,
+        "userid": 1,
         "name": "Burger",
-        "date": "2022-03-29",
+        "date": "2022-01-15",
         "category": "Food",
         "amount": 10.95
+    },
+    {
+        "userid": 1,
+        "name": "Sandwich",
+        "date": "2022-01-19",
+        "category": "Food",
+        "amount": 6.00
+    },
+    {
+        "userid": 1,
+        "name": "Apples",
+        "date": "2022-01-23",
+        "category": "Groceries",
+        "amount": 10.00
+    },
+    {
+        "userid": 1,
+        "name": "Binder",
+        "date": "2022-01-25",
+        "category": "School",
+        "amount": 15.00
+    },
+    {
+        "userid": 1,
+        "name": "Hoodie",
+        "date": "2022-01-26",
+        "category": "Apparel",
+        "amount": 20.50
+    },
+    {
+        "userid": 1,
+        "name": "Cleats",
+        "date": "2022-01-29",
+        "category": "Apparel",
+        "amount": 120.00
+    },
+    {
+        "userid": 1,
+        "name": "Steak",
+        "date": "2022-01-31",
+        "category": "Food",
+        "amount": 23.00
+    },
+    {
+        "userid": 1,
+        "name": "Textboox",
+        "date": "2022-02-02",
+        "category": "School",
+        "amount": 75.00
+    },
+    {
+        "userid": 1,
+        "name": "Monitor",
+        "date": "2022-02-10",
+        "category": "Technology",
+        "amount": 180.00
+    },
+    {
+        "userid": 1,
+        "name": "Tea",
+        "date": "2022-02-13",
+        "category": "Food",
+        "amount": 3.00
+    },
+    {
+        "userid": 1,
+        "name": "Shirt",
+        "date": "2022-02-15",
+        "category": "Apparel",
+        "amount": 10.00
+    },
+    {
+        "userid": 1,
+        "name": "Airpods",
+        "date": "2022-02-19",
+        "category": "Technology",
+        "amount": 148.00
+    },
+    {
+        "userid": 1,
+        "name": "Chips",
+        "date": "2022-02-23",
+        "category": "Food",
+        "amount": 4.50
+    },
+    {
+        "userid": 1,
+        "name": "Sunglasses",
+        "date": "2022-02-25",
+        "category": "Lifestyle",
+        "amount": 7.50
+    },
+    {
+        "userid": 1,
+        "name": "Glue stick",
+        "date": "2022-02-26",
+        "category": "School",
+        "amount": 12.00
+    },
+    {
+        "userid": 1,
+        "name": "Watch",
+        "date": "2022-02-29",
+        "category": "Lifestyle",
+        "amount": 80.00
+    },
+    {
+        "userid": 1,
+        "name": "Alarm Clock",
+        "date": "2022-02-31",
+        "category": "Miscellaneious",
+        "amount": 16.00
+    },
+    {
+        "userid": 1,
+        "name": "Scissors",
+        "date": "2022-03-02",
+        "category": "School",
+        "amount": 7.00
+    },
+    {
+        "userid": 1,
+        "name": "Rubiks Cube",
+        "date": "2022-03-10",
+        "category": "Entertainment",
+        "amount": 10.00
+    },
+    {
+        "userid": 1,
+        "name": "Donut",
+        "date": "2022-03-13",
+        "category": "Food",
+        "amount": 4.50
+    },
+    {
+        "userid": 1,
+        "name": "Backpack",
+        "date": "2022-03-15",
+        "category": "School",
+        "amount": 25.00
+    },
+    {
+        "userid": 1,
+        "name": "Volleyball",
+        "date": "2022-03-19",
+        "category": "Entertainment",
+        "amount": 28.00
+    },
+    {
+        "userid": 1,
+        "name": "Sandals",
+        "date": "2022-03-23",
+        "category": "Apparel",
+        "amount": 30.00
+    },
+    {
+        "userid": 1,
+        "name": "Keyboard",
+        "date": "2022-03-25",
+        "category": "Technology",
+        "amount": 100.00
+    },
+    {
+        "userid": 1,
+        "name": "Calculator",
+        "date": "2022-03-26",
+        "category": "School",
+        "amount": 15.00
+    },
+    {
+        "userid": 1,
+        "name": "Broccoli",
+        "date": "2022-03-29",
+        "category": "Groceries",
+        "amount": 11.00
+    },
+    {
+        "userid": 1,
+        "name": "Beer",
+        "date": "2022-03-31",
+        "category": "Food",
+        "amount": 9.00
+    },
+    {
+        "userid": 1,
+        "name": "Vitamins",
+        "date": "2022-04-02",
+        "category": "Food",
+        "amount": 15.00
+    },
+    {
+        "userid": 1,
+        "name": "Nintendo Switch",
+        "date": "2022-04-10",
+        "category": "Technology",
+        "amount": 340.00
+    },
+    {
+        "userid": 1,
+        "name": "Toothbrush",
+        "date": "2022-04-13",
+        "category": "Lifestyle",
+        "amount": 13.00
+    },
+    {
+        "userid": 1,
+        "name": "Sweatshirt",
+        "date": "2022-04-15",
+        "category": "Apparel",
+        "amount": 25.00
+    },
+    {
+        "userid": 1,
+        "name": "Movie",
+        "date": "2022-04-19",
+        "category": "Entertainment",
+        "amount": 12.75
+    },
+    {
+        "userid": 1,
+        "name": "Hockey stick",
+        "date": "2022-04-23",
+        "category": "Entertainment",
+        "amount": 50.00
+    },
+    {
+        "userid": 1,
+        "name": "Mattress",
+        "date": "2022-04-25",
+        "category": "Lifestyle",
+        "amount": 250.00
+    },
+    {
+        "userid": 1,
+        "name": "Cooking pan",
+        "date": "2022-04-26",
+        "category": "School",
+        "amount": 40.75
+    },
+    {
+        "userid": 1,
+        "name": "Purse",
+        "date": "2022-04-29",
+        "category": "Lifestyle",
+        "amount": 75.00
+    },
+    {
+        "userid": 1,
+        "name": "Gift Card",
+        "date": "2022-04-31",
+        "category": "Miscellaneious",
+        "amount": 25.00
+    },
+    {
+        "userid": 1,
+        "name": "Lego",
+        "date": "2022-05-02",
+        "category": "Entertainment",
+        "amount": 65.00
+    },
+    {
+        "userid": 1,
+        "name": "Hair Dryer",
+        "date": "2022-05-10",
+        "category": "Lifestyle",
+        "amount": 16.00
+    },
+    {
+        "userid": 1,
+        "name": "Blanket",
+        "date": "2022-05-13",
+        "category": "Lifestyle",
+        "amount": 20.00
+    },
+    {
+        "userid": 1,
+        "name": "Jeans",
+        "date": "2022-05-15",
+        "category": "Apparel",
+        "amount": 25.00
+    },
+    {
+        "userid": 1,
+        "name": "Speaker",
+        "date": "2022-05-19",
+        "category": "Technology",
+        "amount": 55.00
+    },
+    {
+        "userid": 1,
+        "name": "Blender",
+        "date": "2022-05-23",
+        "category": "Lifestyle",
+        "amount": 35.00
+    },
+    {
+        "userid": 1,
+        "name": "Peppers",
+        "date": "2022-05-25",
+        "category": "Groceries",
+        "amount": 12.00
+    },
+    {
+        "userid": 1,
+        "name": "Bean Bag Chair",
+        "date": "2022-05-26",
+        "category": "Lifestyle",
+        "amount": 44.50
+    },
+    {
+        "userid": 1,
+        "name": "Chicken Nuggets",
+        "date": "2022-05-29",
+        "category": "Food",
+        "amount": 6.75
+    },
+    {
+        "userid": 1,
+        "name": "Mouse",
+        "date": "2022-05-31",
+        "category": "Technology",
+        "amount": 22.25
     }
 ]
