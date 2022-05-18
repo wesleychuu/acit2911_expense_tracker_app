@@ -5,10 +5,33 @@
     --main-font: 'Merriweather Sans', sans-serif;
 }
 
-.total-expense {
-    margin: 10px;
+.filter-tabs {
+    display: flex;
+    flex-direction: row;
+    color: var(--content-txt);
+    font-size: 1.2rem;
     font-family: var(--main-font);
+}
+
+.filter-btn {
+    border: none;
+    background-color: var(--header-txt);
+    color: var(--content-txt);
+}
+
+.total-expense {
     font-size: 1.7rem;
+}
+
+.no-expenses {
+    font-size: 1.2rem;
+}
+
+.total-expense,
+.no-expenses {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-family: var(--main-font);
     color: var(--content-txt);
 }
 
