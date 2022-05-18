@@ -124,10 +124,245 @@ def homepage():
     if request.method == "POST":
         conn = create_connection("database.db")
         data = request.form
-        eid = data["expense_to_delete"]
         try:
-            delete_one_expense(conn, eid, session["uid"])
-            return redirect(url_for("homepage")), 301
+            if request.form.get("filter_all"):
+                return redirect(url_for("homepage")), 301
+            else:
+                eid = data["expense_to_delete"]
+                delete_one_expense(conn, eid, session["uid"])
+                return redirect(url_for("homepage")), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
+
+    return (
+        render_template(
+            "home.html",
+            user_expenses=user_expenses,
+            total_expense=str(total_expense),
+            data=pie_data,
+        ),
+        200,
+    )
+
+
+@app.route("/home/today", methods=["GET", "POST"])
+def homepage_today():
+    """Render the homepage of a user -- shows their expenses from the past 24 hours or from today only"""
+    conn = create_connection("database.db")
+    # Should select the expenses by uid AND (within 24 hours or from today's date)
+    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+
+    total_category_exp = []
+    for category in CATEGORIES:
+        total_category_exp.append(
+            get_total_expenses_by_category(conn, session["uid"], category)
+        )
+
+    total_expense = get_total_expenses(conn, session["uid"])
+    conn.close()
+
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+                           key=lambda d: d["date"], reverse=True)
+
+    pie_data = {
+        "Category": "Amount",
+        "Food": total_category_exp[0],
+        "Apparel": total_category_exp[1],
+        "Entertainment": total_category_exp[2],
+        "Lifestyle": total_category_exp[3],
+        "Miscellaneous": total_category_exp[4],
+        "Groceries": total_category_exp[5],
+        "Services": total_category_exp[6],
+        "Technology": total_category_exp[7],
+        "School": total_category_exp[8],
+    }
+
+    if request.method == "POST":
+        conn = create_connection("database.db")
+        data = request.form
+        try:
+            if request.form.get("filter_today"):
+                return redirect(url_for("homepage_today")), 301
+            else:
+                eid = data["expense_to_delete"]
+                delete_one_expense(conn, eid, session["uid"])
+                return redirect(url_for("homepage_today")), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
+
+    return (
+        render_template(
+            "home.html",
+            user_expenses=user_expenses,
+            total_expense=str(total_expense),
+            data=pie_data,
+        ),
+        200,
+    )
+
+
+@app.route("/home/week", methods=["GET", "POST"])
+def homepage_week():
+    """Render the homepage of a user -- shows their expenses from this week or the past 168 hours"""
+    conn = create_connection("database.db")
+    # Should select the expenses by uid AND (within 168 hours or from this week)
+    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+
+    total_category_exp = []
+    for category in CATEGORIES:
+        total_category_exp.append(
+            get_total_expenses_by_category(conn, session["uid"], category)
+        )
+
+    total_expense = get_total_expenses(conn, session["uid"])
+    conn.close()
+
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+                           key=lambda d: d["date"], reverse=True)
+
+    pie_data = {
+        "Category": "Amount",
+        "Food": total_category_exp[0],
+        "Apparel": total_category_exp[1],
+        "Entertainment": total_category_exp[2],
+        "Lifestyle": total_category_exp[3],
+        "Miscellaneous": total_category_exp[4],
+        "Groceries": total_category_exp[5],
+        "Services": total_category_exp[6],
+        "Technology": total_category_exp[7],
+        "School": total_category_exp[8],
+    }
+
+    if request.method == "POST":
+        conn = create_connection("database.db")
+        data = request.form
+        try:
+            if request.form.get("filter_week"):
+                return redirect(url_for("homepage_week")), 301
+            else:
+                eid = data["expense_to_delete"]
+                delete_one_expense(conn, eid, session["uid"])
+                return redirect(url_for("homepage_week")), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
+
+    return (
+        render_template(
+            "home.html",
+            user_expenses=user_expenses,
+            total_expense=str(total_expense),
+            data=pie_data,
+        ),
+        200,
+    )
+
+
+@app.route("/home/month", methods=["GET", "POST"])
+def homepage_month():
+    """Render the homepage of a user -- shows their expenses from this month"""
+    conn = create_connection("database.db")
+    # Should select the expenses by uid AND from this month
+    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+
+    total_category_exp = []
+    for category in CATEGORIES:
+        total_category_exp.append(
+            get_total_expenses_by_category(conn, session["uid"], category)
+        )
+
+    total_expense = get_total_expenses(conn, session["uid"])
+    conn.close()
+
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+                           key=lambda d: d["date"], reverse=True)
+
+    pie_data = {
+        "Category": "Amount",
+        "Food": total_category_exp[0],
+        "Apparel": total_category_exp[1],
+        "Entertainment": total_category_exp[2],
+        "Lifestyle": total_category_exp[3],
+        "Miscellaneous": total_category_exp[4],
+        "Groceries": total_category_exp[5],
+        "Services": total_category_exp[6],
+        "Technology": total_category_exp[7],
+        "School": total_category_exp[8],
+    }
+
+    if request.method == "POST":
+        conn = create_connection("database.db")
+        data = request.form
+        try:
+            if request.form.get("filter_month"):
+                return redirect(url_for("homepage_month")), 301
+            else:
+                eid = data["expense_to_delete"]
+                delete_one_expense(conn, eid, session["uid"])
+                return redirect(url_for("homepage_month")), 301
+        except ValueError:
+            return "", 400
+        finally:
+            conn.close()
+
+    return (
+        render_template(
+            "home.html",
+            user_expenses=user_expenses,
+            total_expense=str(total_expense),
+            data=pie_data,
+        ),
+        200,
+    )
+
+
+@app.route("/home/year", methods=["GET", "POST"])
+def homepage_year():
+    """Render the homepage of a user -- shows their expenses from this year"""
+    conn = create_connection("database.db")
+    # Should select the expenses by uid AND from this year
+    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+
+    total_category_exp = []
+    for category in CATEGORIES:
+        total_category_exp.append(
+            get_total_expenses_by_category(conn, session["uid"], category)
+        )
+
+    total_expense = get_total_expenses(conn, session["uid"])
+    conn.close()
+
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+                           key=lambda d: d["date"], reverse=True)
+
+    pie_data = {
+        "Category": "Amount",
+        "Food": total_category_exp[0],
+        "Apparel": total_category_exp[1],
+        "Entertainment": total_category_exp[2],
+        "Lifestyle": total_category_exp[3],
+        "Miscellaneous": total_category_exp[4],
+        "Groceries": total_category_exp[5],
+        "Services": total_category_exp[6],
+        "Technology": total_category_exp[7],
+        "School": total_category_exp[8],
+    }
+
+    if request.method == "POST":
+        conn = create_connection("database.db")
+        data = request.form
+        try:
+            if request.form.get("filter_year"):
+                return redirect(url_for("homepage_year")), 301
+            else:
+                eid = data["expense_to_delete"]
+                delete_one_expense(conn, eid, session["uid"])
+                return redirect(url_for("homepage_year")), 301
         except ValueError:
             return "", 400
         finally:

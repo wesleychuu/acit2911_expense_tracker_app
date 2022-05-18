@@ -9,8 +9,8 @@
 <div class="message">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
-      {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+        {{ message }}
     </div>
     {% endfor %}
 </div>
@@ -22,7 +22,7 @@
             <input type="text" name="name" placeholder="Title of Expense" value="{{ expense[2] }}" required>
         </div>
         <br>
-        <div><select name="category" id="type">
+        <div><select name="category" id="type" required>
                 <option value="{{ expense[4] }}">{{ expense[4] }}</option>
                 <option value="Food">Food</option>
                 <option value="Apparel">Apparel</option>
@@ -38,7 +38,8 @@
         <br>
 
         <div class="expense cost">
-            <input type="number" name="amount" placeholder="Cost" value="{{ expense[5] }}" required step="any" min="0.01">
+            <input type="number" name="amount" placeholder="Cost" value="{{ expense[5] }}" required step="any"
+                min="0.01">
         </div>
         <br>
         <div class="expense date">
@@ -48,7 +49,8 @@
         <br>
         <div>
             <button type="submit" class="btn btn-lg btn-success btn-block submit-btn" id="frm-btn">Save</button>
-            <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn"><a href="{{ url_for('homepage') }}">Cancel</a></button>
+            <button type="button" class="btn btn-lg btn-primary btn-block submit-btn" id="frm-btn"><a
+                    href="{{ url_for('homepage') }}">Cancel</a></button>
         </div>
     </form>
 </section>
