@@ -38,7 +38,7 @@ def login():
         if not user or user[4] != str(
             hashlib.sha256(form.password.data.encode()).hexdigest()
         ):
-            flash("Incorrect username or password", category="alert-warning")
+            flash("Inccorrect username or password", category="alert-warning")
         else:
             if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
                 session["uid"] = user[0]
@@ -105,8 +105,7 @@ def homepage():
     total_expense = get_total_expenses(conn, session["uid"])
     conn.close()
 
-    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
-                           key=lambda d: d["date"], reverse=True)
+    user_expenses = [data_to_dict(each_expense) for each_expense in tuple_expenses]
 
     pie_data = {
         "Category": "Amount",
@@ -153,8 +152,7 @@ def add_page():
     if request.method == "POST":
         try:
             ex1 = Expense(
-                data["name"], data["date"], data["category"], float(
-                    data["amount"])
+                data["name"], data["date"], data["category"], float(data["amount"])
             )
             insert_expense(
                 conn, session["uid"], ex1.name, ex1.date, ex1.category, ex1.amount
@@ -180,7 +178,8 @@ def get_expense(eid):
         data = request.form
         try:
             update_expense(
-                conn, eid, data["name"], data["category"], data["amount"], data["date"])
+                conn, eid, data["name"], data["category"], data["amount"], data["date"]
+            )
             return redirect(url_for("homepage")), 301
         except ValueError:
             return "", 400
@@ -188,8 +187,7 @@ def get_expense(eid):
             conn.close()
 
     return (
-        render_template("edit_expense.html",
-                        expense=expense, uid=session["uid"]),
+        render_template("edit_expense.html", expense=expense, uid=session["uid"]),
         200,
     )
 
@@ -207,8 +205,7 @@ def profile():
         try:
             delete_all_user_expense(conn, session["uid"])
             delete_user_by_id(conn, session["uid"])
-            flash("Account deleted -- Sorry to see you go :(",
-                  category="alert-success")
+            flash("Account deleted -- Sorry to see you go :(", category="alert-success")
             return redirect(url_for("login")), 301
         except ValueError:
             return "", 400
@@ -216,8 +213,7 @@ def profile():
             conn.close()
 
     return (
-        render_template("profile.html", name=name,
-                        username=username, email=email),
+        render_template("profile.html", name=name, username=username, email=email),
         200,
     )
 
@@ -248,17 +244,15 @@ def profile_edit():
             flash("Username already taken", category="alert-success")
         elif existing_email and existing_email != user:
             flash("Email already registered", category="alert-success")
-        # elif len(data["username"]) < 5:
-        #     flash("Username too short", category="alert-success")
-        # elif "@" not in data["email"]:
-        #     flash("Invalid email", category="alert-success")
-        elif "." not in data["email"]:
-            flash("Invalid email", category="alert-success")
         else:
-            update_user(conn, session["uid"], data["name"],
-                        data["username"], data["email"])
+            update_user(
+                conn, session["uid"], data["name"], data["username"], data["email"]
+            )
             return redirect("/profile"), 301
-    return render_template("edit_profile.html", name=name, username=username, email=email), 200
+    return (
+        render_template("edit_profile.html", name=name, username=username, email=email),
+        200,
+    )
 
 
 @app.route("/profile/resetpassword", methods=["GET", "POST"])
@@ -278,8 +272,7 @@ def reset_password():
                         conn,
                         session["uid"],
                         str(
-                            hashlib.sha256(
-                                form.new_password.data.encode()).hexdigest()
+                            hashlib.sha256(form.new_password.data.encode()).hexdigest()
                         ),
                     )
                     session["uid"] = None
@@ -294,23 +287,6 @@ def reset_password():
                     conn.close()
 
     return render_template("reset_password.html", form=form, uid=session["uid"]), 200
-
-
-@app.route("/search", methods=["GET", "POST"])
-def search():
-    form = SearchForm()
-    if request.method == "POST":
-        if form.validate_on_submit():
-            searched = form.searched.data
-            return render_template("search.html", form=form, searched=searched), 200
-
-    return render_template("search.html", form=form, categories=CATEGORIES), 200
-
-
-@app.route("/search/<category>", methods=["POST"])
-def search_category(category):
-    form = SearchForm()
-    return render_template("search.html", form=form, searched=category), 200
 
 
 if __name__ == "__main__":
