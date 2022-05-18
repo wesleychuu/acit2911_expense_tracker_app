@@ -1,11 +1,11 @@
-from expense_module import *
+from modules.expense_module import *
 import pytest
 import sqlite3
 
 
 @pytest.fixture()
 def db():
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("tests/test_database.db")
     return conn
 
 
