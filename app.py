@@ -1,4 +1,5 @@
 import datetime
+import re
 import sqlite3
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -552,7 +553,10 @@ def search_result_kw(searched):
     form = SearchForm()
 
     conn = create_connection("database.db")
-    total, expenses = get_expense_keyword(conn, session["uid"], searched)
+    if re.match("20", searched):
+        total, expenses = get_expense_date_search(conn, session["uid"], searched)
+    else:    
+        total, expenses = get_expense_keyword(conn, session["uid"], searched)
     conn.close()
 
     expenses = [data_to_dict(e) for e in expenses]
