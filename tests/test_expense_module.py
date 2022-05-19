@@ -74,3 +74,43 @@ def test_get_all_expenses(db):
         (3, 1, "Movie", "2022-03-29", "Entertainment", 12.75),
         (4, 2, "Burger", "2022-03-29", "Food", 10.95),
     ]
+
+
+def test_update_expense(db):
+    assert update_expense(db, 1, "Coffee", "Food", 4.5, "2022-04-29") == None
+
+
+def test_get_user_categories(db):
+    assert get_user_categories(db, 1) == ["Entertainment", "Food", "Technology"]
+
+
+def test_get_expense_today(db):
+    assert get_expense_today(db, 1) == get_expense_today(db, 1)
+
+
+def test_get_expense_week(db):
+    assert get_expense_week(db, 1) == get_expense_week(db, 1)
+
+
+def test_get_expense_month(db):
+    assert get_expense_month(db, 1) == get_expense_month(db, 1)
+
+
+def test_get_expense_keyword(db):
+    assert get_expense_keyword(db, 1, "Coffee") == (
+        4.5,
+        [(1, 1, "Coffee", "2022-04-29", "Food", 4.5)],
+    )
+
+
+def test_get_expense_category(db):
+    assert get_expense_category(db, 1, "Food") == (
+        4.5,
+        [(1, 1, "Coffee", "2022-04-29", "Food", 4.5)],
+    )
+
+
+def test_get_expense_date_search(db):
+    assert get_expense_date_search(db, 1, "2022-04-01") == [
+        (2, 1, "Laptop", "2022-04-01", "Technology", 1200)
+    ]
