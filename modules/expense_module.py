@@ -200,7 +200,7 @@ def get_total_expenses(conn, uid: int) -> int:
 
 def update_expense(conn, eid: int, name: str, category: str, amount: str, date: str):
     """
-    Update
+    Update the given expense with the given information 
 
     Parameters:
         conn:           the Connection object
@@ -216,3 +216,119 @@ def update_expense(conn, eid: int, name: str, category: str, amount: str, date: 
         (name, category, amount, date, eid,)
     )
     conn.commit()
+
+
+def get_user_categories(conn, uid: int) -> list:
+    """
+    Get the categories that users have expenses in
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+    
+    Return:
+        A list of the user's expense categories
+    """
+    cur = conn.cursor()
+    cat = cur.execute("SELECT category FROM expenses WHERE user_id=?", (uid,))
+    cat = set(cat)
+
+    categories = []
+    if cat:
+        for c in cat:
+            categories.append(c[0])
+
+    return sorted(categories)
+
+def get_expense_today(conn, uid: int) -> tuple:
+    """
+    Get the list of user expenses recorded today, along with the total
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+    
+    Return:
+        A tuple consisting of the user's list of expenses made today and the total
+    """
+    cur = conn.cursor()
+    exp = cur.execute(
+        "SELECT * FROM expenses WHERE DATE(date) = DATE('now') AND user_id=?", (uid,))
+    today_exp = exp.fetchall()
+    
+    total = 0
+    if today_exp:
+        for e in today_exp:
+            total += e[5]
+    
+    return total, today_exp
+
+def get_expense_week(conn, uid: int) -> tuple:
+    """
+    Get the list of user expenses recorded in the past 7 days, along with the total
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+    
+    Return:
+        A tuple consisting of the user's list of expenses in the past week and the total
+    """
+    cur = conn.cursor()
+    exp = cur.execute(
+        "SELECT * FROM expenses WHERE DATE(date) >= DATE('now', '-7 day') AND user_id=?", (uid,))
+    week_exp = exp.fetchall()
+    
+    total = 0
+    if week_exp:
+        for e in week_exp:
+            total += e[5]
+    
+    return total, week_exp
+
+def get_expense_month(conn, uid: int) -> tuple:
+    """
+    Get the list of user expenses recorded in the past 30 days, along with the total
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+    
+    Return:
+        A tuple consisting of the user's list of expenses in the past 30 days and the total
+    """
+    cur = conn.cursor()
+    exp = cur.execute(
+        "SELECT * FROM expenses WHERE DATE(date) >= DATE('now', '-30 day') AND user_id=?", (uid,))
+    month_exp = exp.fetchall()
+    
+    total = 0
+    if month_exp:
+        for e in month_exp:
+            total += e[5]
+    
+    return total, month_exp
+
+def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
+    """
+    Get the list of user expenses where name matches a given keyword, along with the total
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+        kw (str):   the keyword string to match
+    
+    Return:
+        A tuple consisting of the user's list of expenses matching the keyword and the total
+    """
+    cur = conn.cursor()
+    exp = cur.execute(
+        "SELECT * FROM expenses WHERE name LIKE '%'||?||'%' AND user_id=?", (kw, uid,))
+    kw_exp = exp.fetchall()
+    
+    total = 0
+    if kw_exp:
+        for e in kw_exp:
+            total += e[5]
+    
+    return total, kw_exp
