@@ -225,7 +225,7 @@ def get_user_categories(conn, uid: int) -> list:
     Parameters:
         conn:       the Connection object
         uid (int):  the user's id
-    
+
     Return:
         A list of the user's expense categories
     """
@@ -240,6 +240,7 @@ def get_user_categories(conn, uid: int) -> list:
 
     return sorted(categories)
 
+
 def get_expense_today(conn, uid: int) -> tuple:
     """
     Get the list of user expenses recorded today, along with the total
@@ -247,7 +248,7 @@ def get_expense_today(conn, uid: int) -> tuple:
     Parameters:
         conn:       the Connection object
         uid (int):  the user's id
-    
+
     Return:
         A tuple consisting of the user's list of expenses made today and the total
     """
@@ -255,13 +256,14 @@ def get_expense_today(conn, uid: int) -> tuple:
     exp = cur.execute(
         "SELECT * FROM expenses WHERE DATE(date) = DATE('now') AND user_id=?", (uid,))
     today_exp = exp.fetchall()
-    
+
     total = 0
     if today_exp:
         for e in today_exp:
             total += e[5]
-    
+
     return total, today_exp
+
 
 def get_expense_week(conn, uid: int) -> tuple:
     """
@@ -270,7 +272,7 @@ def get_expense_week(conn, uid: int) -> tuple:
     Parameters:
         conn:       the Connection object
         uid (int):  the user's id
-    
+
     Return:
         A tuple consisting of the user's list of expenses in the past week and the total
     """
@@ -278,13 +280,14 @@ def get_expense_week(conn, uid: int) -> tuple:
     exp = cur.execute(
         "SELECT * FROM expenses WHERE DATE(date) >= DATE('now', '-7 day') AND user_id=?", (uid,))
     week_exp = exp.fetchall()
-    
+
     total = 0
     if week_exp:
         for e in week_exp:
             total += e[5]
-    
+
     return total, week_exp
+
 
 def get_expense_month(conn, uid: int) -> tuple:
     """
@@ -293,7 +296,7 @@ def get_expense_month(conn, uid: int) -> tuple:
     Parameters:
         conn:       the Connection object
         uid (int):  the user's id
-    
+
     Return:
         A tuple consisting of the user's list of expenses in the past 30 days and the total
     """
@@ -301,13 +304,14 @@ def get_expense_month(conn, uid: int) -> tuple:
     exp = cur.execute(
         "SELECT * FROM expenses WHERE DATE(date) >= DATE('now', '-30 day') AND user_id=?", (uid,))
     month_exp = exp.fetchall()
-    
+
     total = 0
     if month_exp:
         for e in month_exp:
             total += e[5]
-    
+
     return total, month_exp
+
 
 def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
     """
@@ -317,7 +321,7 @@ def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
         conn:       the Connection object
         uid (int):  the user's id
         kw (str):   the keyword string to match
-    
+
     Return:
         A tuple consisting of the user's list of expenses matching the keyword and the total
     """
@@ -325,13 +329,14 @@ def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
     exp = cur.execute(
         "SELECT * FROM expenses WHERE name LIKE '%'||?||'%' AND user_id=?", (kw, uid,))
     kw_exp = exp.fetchall()
-    
+
     total = 0
     if kw_exp:
         for e in kw_exp:
             total += e[5]
-    
+
     return total, kw_exp
+
 
 def get_expense_category(conn, uid: int, category: str) -> tuple:
     """
@@ -341,7 +346,7 @@ def get_expense_category(conn, uid: int, category: str) -> tuple:
         conn:       the Connection object
         uid (int):  the user's id
         kw (str):   the category to match
-    
+
     Return:
         A tuple consisting of the user's list of expenses matching the category and the total
     """
@@ -349,10 +354,17 @@ def get_expense_category(conn, uid: int, category: str) -> tuple:
     exp = cur.execute(
         "SELECT * FROM expenses WHERE category LIKE '%'||?||'%' AND user_id=?", (category, uid,))
     category_exp = exp.fetchall()
-    
+
     total = 0
     if category_exp:
         for e in category_exp:
             total += e[5]
-    
+
     return total, category_exp
+
+
+def get_expense_today(conn):
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT * FROM expenses WHERE date BETWEEN DATE('now')-1 AND DATE('now')")
+    return cur.fetchall()
