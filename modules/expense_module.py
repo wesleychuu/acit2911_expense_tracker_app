@@ -363,6 +363,24 @@ def get_expense_category(conn, uid: int, category: str) -> tuple:
     return total, category_exp
 
 def get_expense_date_search(conn, uid: int, date: str) -> tuple:
+    """
+    Get the list of user expenses where date matches a given date, along with the total
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+        date (str): the date to match
+
+    Return:
+        A tuple consisting of the user's list of expenses matching the date and the total
+    """
     cur = conn.cursor()
     cur.execute("SELECT * FROM expenses WHERE date LIKE '%'||?||'%' AND user_id=?", (date, uid,))
-    return cur.fetchall()
+    date_exp = cur.fetchall()
+    
+    total = 0
+    if date_exp:
+        for e in date_exp:
+            total += e[5]
+
+    return total, date_exp
