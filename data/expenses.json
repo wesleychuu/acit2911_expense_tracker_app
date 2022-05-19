@@ -136,7 +136,7 @@
         "userid": 1,
         "name": "Alarm Clock",
         "date": "2022-02-31",
-        "category": "Miscellaneious",
+        "category": "Miscellaneous",
         "amount": 16.00
     },
     {
@@ -276,7 +276,7 @@
         "userid": 1,
         "name": "Gift Card",
         "date": "2022-04-31",
-        "category": "Miscellaneious",
+        "category": "Miscellaneous",
         "amount": 25.00
     },
     {
