@@ -363,8 +363,14 @@ def get_expense_category(conn, uid: int, category: str) -> tuple:
     return total, category_exp
 
 
-def get_expense_today(conn):
+def get_expense_today(conn, uid):
     cur = conn.cursor()
     cur.execute(
-        "SELECT * FROM expenses WHERE date BETWEEN DATE('now')-1 AND DATE('now')")
+        "SELECT * FROM expenses WHERE user_id=? AND date BETWEEN DATE('now')-1 AND DATE('now')", (uid,))
+    return cur.fetchall()
+
+
+def get_expense_date_search(conn, date):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM expenses WHERE date=?", (date,))
     return cur.fetchall()
