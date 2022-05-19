@@ -313,6 +313,30 @@ def get_expense_month(conn, uid: int) -> tuple:
     return "{:.2f}".format(total), month_exp
 
 
+def get_expense_year(conn, uid: int) -> tuple:
+    """
+    Get the list of user expenses recorded in the past 365 days, along with the total
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+
+    Return:
+        A tuple consisting of the user's list of expenses in the past 365 days and the total
+    """
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT * FROM expenses WHERE DATE(date) >= DATE('now', '-365 day') AND user_id=?", (uid,))
+    year_exp = cur.fetchall()
+
+    total = 0
+    if year_exp:
+        for e in year_exp:
+            total += e[5]
+
+    return "{:.2f}".format(total), year_exp
+
+
 def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
     """
     Get the list of user expenses where name matches a given keyword, along with the total
