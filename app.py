@@ -534,20 +534,26 @@ def reset_password():
 @app.route("/search", methods=["GET", "POST"])
 def search():
     form = SearchForm()
+
+    conn = sqlite3.connect("database.db")
+    categories = get_user_categories(conn, session["uid"])
+    conn.close()
+
     if request.method == "POST":
         if form.validate_on_submit():
             searched = form.searched.data
             return redirect(url_for("search_result_kw", searched=searched))
 
-    return render_template("search.html", form=form, categories=CATEGORIES), 200
+    return render_template("search.html", form=form, categories=categories), 200
 
 
 @app.route("/search?search=<searched>", methods=["GET", "POST"])
 def search_result_kw(searched):
     form = SearchForm()
-    conn = create_connection("database.db")
 
+    conn = create_connection("database.db")
     total, expenses = get_expense_keyword(conn, session["uid"], searched)
+    conn.close()
 
     expenses = [data_to_dict(e) for e in expenses]
 
@@ -557,9 +563,10 @@ def search_result_kw(searched):
 @app.route("/search?category=<searched>", methods=["GET", "POST"])
 def search_result_category(searched):
     form = SearchForm()
-    conn = create_connection("database.db")
 
+    conn = create_connection("database.db")
     total, expenses = get_expense_category(conn, session["uid"], searched)
+    conn.close()
 
     expenses = [data_to_dict(e) for e in expenses]
 
