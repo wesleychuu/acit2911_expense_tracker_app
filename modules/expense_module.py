@@ -262,7 +262,7 @@ def get_expense_today(conn, uid: int) -> tuple:
         for e in today_exp:
             total += e[5]
 
-    return "{:.2f}".format(total), today_exp
+    return float("{:.2f}".format(total)), today_exp
 
 
 def get_expense_week(conn, uid: int) -> tuple:
@@ -286,7 +286,7 @@ def get_expense_week(conn, uid: int) -> tuple:
         for e in week_exp:
             total += e[5]
 
-    return "{:.2f}".format(total), week_exp
+    return float("{:.2f}".format(total)), week_exp
 
 
 def get_expense_month(conn, uid: int) -> tuple:
@@ -310,7 +310,7 @@ def get_expense_month(conn, uid: int) -> tuple:
         for e in month_exp:
             total += e[5]
 
-    return "{:.2f}".format(total), month_exp
+    return float("{:.2f}".format(total)), month_exp
 
 
 def get_expense_year(conn, uid: int) -> tuple:
@@ -334,7 +334,7 @@ def get_expense_year(conn, uid: int) -> tuple:
         for e in year_exp:
             total += e[5]
 
-    return "{:.2f}".format(total), year_exp
+    return float("{:.2f}".format(total)), year_exp
 
 
 def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
@@ -359,7 +359,7 @@ def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
         for e in kw_exp:
             total += e[5]
 
-    return "{:.2f}".format(total), kw_exp
+    return float("{:.2f}".format(total)), kw_exp
 
 
 def get_expense_category(conn, uid: int, category: str) -> tuple:
@@ -384,7 +384,7 @@ def get_expense_category(conn, uid: int, category: str) -> tuple:
         for e in category_exp:
             total += e[5]
 
-    return "{:.2f}".format(total), category_exp
+    return float("{:.2f}".format(total)), category_exp
 
 def get_expense_date_search(conn, uid: int, date: str) -> tuple:
     """
@@ -407,4 +407,4 @@ def get_expense_date_search(conn, uid: int, date: str) -> tuple:
         for e in date_exp:
             total += e[5]
 
-    return "{:.2f}".format(total), date_exp
+    return float("{:.2f}".format(total)), date_exp
