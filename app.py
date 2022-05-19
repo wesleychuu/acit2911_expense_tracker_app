@@ -56,7 +56,7 @@ def signup():
         conn = create_connection("database.db")
 
         existing_username = select_user_by_username(conn, form.username.data)
-        existing_email = select_user_by_email(conn, form.email.data)
+        existing_email = select_user_by_email(conn, form.email.data.lower())
 
         # check if username is taken
         # check if email taken
@@ -69,7 +69,7 @@ def signup():
             new_user = User(
                 name=form.name.data,
                 username=form.username.data,
-                email=form.email.data,
+                email=form.email.data.lower(),
                 password=form.password.data,
             )
 
@@ -555,12 +555,14 @@ def search_result_kw(searched):
 
     conn = create_connection("database.db")
     if re.match("20", searched):
-        total, expenses = get_expense_date_search(conn, session["uid"], searched)
-    else:    
+        total, expenses = get_expense_date_search(
+            conn, session["uid"], searched)
+    else:
         total, expenses = get_expense_keyword(conn, session["uid"], searched)
     conn.close()
 
-    expenses = sorted([data_to_dict(e) for e in expenses], key=lambda d: d["date"], reverse=True)
+    expenses = sorted([data_to_dict(e) for e in expenses],
+                      key=lambda d: d["date"], reverse=True)
 
     return render_template("search.html", form=form, searched=searched, total=total, expenses=expenses), 200
 
@@ -573,7 +575,8 @@ def search_result_category(searched):
     total, expenses = get_expense_category(conn, session["uid"], searched)
     conn.close()
 
-    expenses = sorted([data_to_dict(e) for e in expenses], key=lambda d: d["date"], reverse=True)
+    expenses = sorted([data_to_dict(e) for e in expenses],
+                      key=lambda d: d["date"], reverse=True)
 
     return render_template("search.html", form=form, searched=searched, total=total, expenses=expenses), 200
 
