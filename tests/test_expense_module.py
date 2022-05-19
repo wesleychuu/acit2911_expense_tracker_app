@@ -96,6 +96,10 @@ def test_get_expense_month(db):
     assert get_expense_month(db, 1) == get_expense_month(db, 1)
 
 
+def test_get_expense_year(db):
+    assert get_expense_year(db, 1) == get_expense_year(db, 1)
+
+
 def test_get_expense_keyword(db):
     assert get_expense_keyword(db, 1, "Coffee") == (
         4.5,
