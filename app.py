@@ -537,15 +537,33 @@ def search():
     if request.method == "POST":
         if form.validate_on_submit():
             searched = form.searched.data
-            return render_template("search.html", form=form, searched=searched), 200
+            return redirect(url_for("search_result_kw", searched=searched))
 
     return render_template("search.html", form=form, categories=CATEGORIES), 200
 
 
-@app.route("/search/<category>", methods=["POST"])
-def search_category(category):
+@app.route("/search?search=<searched>", methods=["GET", "POST"])
+def search_result_kw(searched):
     form = SearchForm()
-    return render_template("search.html", form=form, searched=category), 200
+    conn = create_connection("database.db")
+
+    total, expenses = get_expense_keyword(conn, session["uid"], searched)
+
+    expenses = [data_to_dict(e) for e in expenses]
+
+    return render_template("search.html", form=form, searched=searched, total=total, expenses=expenses), 200
+
+
+@app.route("/search?category=<searched>", methods=["GET", "POST"])
+def search_result_category(searched):
+    form = SearchForm()
+    conn = create_connection("database.db")
+
+    total, expenses = get_expense_category(conn, session["uid"], searched)
+
+    expenses = [data_to_dict(e) for e in expenses]
+
+    return render_template("search.html", form=form, searched=searched, total=total, expenses=expenses), 200
 
 
 if __name__ == "__main__":

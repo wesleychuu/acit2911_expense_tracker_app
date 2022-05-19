@@ -332,3 +332,27 @@ def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
             total += e[5]
     
     return total, kw_exp
+
+def get_expense_category(conn, uid: int, category: str) -> tuple:
+    """
+    Get the list of user expenses where category matches a given category, along with the total
+
+    Parameters:
+        conn:       the Connection object
+        uid (int):  the user's id
+        kw (str):   the category to match
+    
+    Return:
+        A tuple consisting of the user's list of expenses matching the category and the total
+    """
+    cur = conn.cursor()
+    exp = cur.execute(
+        "SELECT * FROM expenses WHERE category LIKE '%'||?||'%' AND user_id=?", (category, uid,))
+    category_exp = exp.fetchall()
+    
+    total = 0
+    if category_exp:
+        for e in category_exp:
+            total += e[5]
+    
+    return total, category_exp
