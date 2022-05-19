@@ -6,6 +6,11 @@
 
 {% block styles %}
 {{super()}}
+{% endblock %}
+
+{% block css_linking %}
+<link rel="stylesheet" href="{{url_for('.static', filename='app.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='home.css')}}">
 <link rel="stylesheet" href="{{url_for('.static', filename='search.css')}}">
 {% endblock %}
 
@@ -25,16 +30,48 @@
     </div>
     <br>
     <div class="row">
-        <h2>You searched for {{ searched }}</h2>
-        <table>
+        <h2>Total: {{ total }}</h2>
+        <table class="categories">
             {% for c in categories %}
-            <tr>
-                <form action="{{ url_for('search_category', category=c) }}" method="POST">
-                    <input type=hidden value="{{ c }}" name=category />
-                    <button class="btn btn-primary btn-lg rounded-0 p-4" type="submit">{{ c }}</button>
+            <tr class="category">
+                <form action="{{ url_for('search_result_category', searched=c) }}" method="POST">
+                    <input type=hidden value="{{ c }}" name=searched />
+                    <button class="btn btn-primary btn-lg w-100 rounded-0 p-4" type="submit">{{ c }}</button>
                 </form>
             </tr>
             {% endfor %}
+        </table>
+
+        <table>
+            <tbody>
+                {% for e in expenses %}
+                <tr>
+                    <td>
+                        {{ e.date }}
+                    </td>
+                    <td>
+                        {{ e.name }}
+                    </td>
+                    <td>
+                        {{ e.category }}
+                    </td>
+                    <td class="expense-amount">
+                        ${{ e.amount }}
+                        <div class="home-icons">
+                            <span id="{{ e.eid }}">
+                                <a href="{{ url_for('get_expense', eid=e.eid) }}">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </a>
+                            </span>
+                            <form action="/home" method="POST">
+                                <input type=hidden value="{{ e.eid }}" name=expense_to_delete />
+                                <button type="submit" class="btn"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
     <br>
