@@ -120,9 +120,9 @@
     },
     {
         "userid": 1,
-        "name": "Glue stick",
+        "name": "Shirt",
         "date": "2022-02-26",
-        "category": "School",
+        "category": "Apparel",
         "amount": 12.00
     },
     {
@@ -169,10 +169,10 @@
     },
     {
         "userid": 1,
-        "name": "Volleyball",
+        "name": "Beer",
         "date": "2022-03-19",
-        "category": "Entertainment",
-        "amount": 28.00
+        "category": "Food",
+        "amount": 9.00
     },
     {
         "userid": 1,
@@ -288,10 +288,10 @@
     },
     {
         "userid": 1,
-        "name": "Hair Dryer",
+        "name": "Burger",
         "date": "2022-05-10",
-        "category": "Lifestyle",
-        "amount": 16.00
+        "category": "Food",
+        "amount": 7.25
     },
     {
         "userid": 1,
@@ -344,9 +344,9 @@
     },
     {
         "userid": 1,
-        "name": "Mouse",
+        "name": "Lego",
         "date": "2022-05-31",
-        "category": "Technology",
-        "amount": 22.25
+        "category": "Entertainment",
+        "amount": 53.00
     }
 ]
