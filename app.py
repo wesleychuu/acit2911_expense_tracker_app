@@ -153,7 +153,7 @@ def homepage_today():
     """Render the homepage of a user -- shows their expenses from the past 24 hours or from today only"""
     conn = create_connection("database.db")
     # Should select the expenses by uid AND (within 24 hours or from today's date)
-    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+    tuple_expenses = get_expense_today(conn, session["uid"])
 
     total_category_exp = []
     for category in CATEGORIES:
@@ -161,10 +161,10 @@ def homepage_today():
             get_total_expenses_by_category(conn, session["uid"], category)
         )
 
-    total_expense = get_total_expenses(conn, session["uid"])
+    total_expense = tuple_expenses[0]
     conn.close()
 
-    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
 
     pie_data = {
@@ -197,7 +197,7 @@ def homepage_today():
 
     return (
         render_template(
-            "home.html",
+            "home_today.html",
             user_expenses=user_expenses,
             total_expense=str(total_expense),
             data=pie_data,
@@ -211,7 +211,7 @@ def homepage_week():
     """Render the homepage of a user -- shows their expenses from this week or the past 168 hours"""
     conn = create_connection("database.db")
     # Should select the expenses by uid AND (within 168 hours or from this week)
-    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+    tuple_expenses = get_expense_week(conn, session["uid"])
 
     total_category_exp = []
     for category in CATEGORIES:
@@ -219,10 +219,10 @@ def homepage_week():
             get_total_expenses_by_category(conn, session["uid"], category)
         )
 
-    total_expense = get_total_expenses(conn, session["uid"])
+    total_expense = tuple_expenses[0]
     conn.close()
 
-    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
 
     pie_data = {
@@ -255,7 +255,7 @@ def homepage_week():
 
     return (
         render_template(
-            "home.html",
+            "home_week.html",
             user_expenses=user_expenses,
             total_expense=str(total_expense),
             data=pie_data,
@@ -269,7 +269,7 @@ def homepage_month():
     """Render the homepage of a user -- shows their expenses from this month"""
     conn = create_connection("database.db")
     # Should select the expenses by uid AND from this month
-    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+    tuple_expenses = get_expense_month(conn, session["uid"])
 
     total_category_exp = []
     for category in CATEGORIES:
@@ -277,10 +277,10 @@ def homepage_month():
             get_total_expenses_by_category(conn, session["uid"], category)
         )
 
-    total_expense = get_total_expenses(conn, session["uid"])
+    total_expense = tuple_expenses[0]
     conn.close()
 
-    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
 
     pie_data = {
@@ -313,7 +313,7 @@ def homepage_month():
 
     return (
         render_template(
-            "home.html",
+            "home_month.html",
             user_expenses=user_expenses,
             total_expense=str(total_expense),
             data=pie_data,
@@ -327,7 +327,7 @@ def homepage_year():
     """Render the homepage of a user -- shows their expenses from this year"""
     conn = create_connection("database.db")
     # Should select the expenses by uid AND from this year
-    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+    tuple_expenses = get_expense_year(conn, session["uid"])
 
     total_category_exp = []
     for category in CATEGORIES:
@@ -335,10 +335,10 @@ def homepage_year():
             get_total_expenses_by_category(conn, session["uid"], category)
         )
 
-    total_expense = get_total_expenses(conn, session["uid"])
+    total_expense = tuple_expenses[0]
     conn.close()
 
-    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
+    user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
 
     pie_data = {
@@ -371,7 +371,7 @@ def homepage_year():
 
     return (
         render_template(
-            "home.html",
+            "home_year.html",
             user_expenses=user_expenses,
             total_expense=str(total_expense),
             data=pie_data,
