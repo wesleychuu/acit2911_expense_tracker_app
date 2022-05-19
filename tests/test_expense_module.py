@@ -115,6 +115,7 @@ def test_get_expense_category(db):
 
 
 def test_get_expense_date_search(db):
-    assert get_expense_date_search(db, 1, "2022-04-01") == [
-        (2, 1, "Laptop", "2022-04-01", "Technology", 1200)
-    ]
+    assert get_expense_date_search(db, 1, "2022-04-01") == (
+        1200.0,
+        [(2, 1, "Laptop", "2022-04-01", "Technology", 1200)],
+    )
