@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 import re
 import sqlite3
 from flask_bootstrap import Bootstrap
@@ -385,7 +385,7 @@ def add_page():
     """Adds an expense under the user's ID"""
     data = request.form
     conn = create_connection("database.db")
-
+    today = date.today()
     if request.method == "POST":
         try:
             ex1 = Expense(
@@ -401,7 +401,7 @@ def add_page():
         finally:
             conn.close()
 
-    return render_template("add_expense.html"), 200
+    return render_template("add_expense.html", today=today), 200
 
 
 @app.route("/edit/<eid>", methods=["GET", "POST"])
@@ -410,6 +410,7 @@ def get_expense(eid):
     conn = create_connection("database.db")
     expense = select_one_expense(conn, eid, session["uid"])
     conn.close()
+    today = date.today()
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -425,7 +426,7 @@ def get_expense(eid):
 
     return (
         render_template("edit_expense.html",
-                        expense=expense, uid=session["uid"]),
+                        expense=expense, uid=session["uid"], today=today),
         200,
     )
 
