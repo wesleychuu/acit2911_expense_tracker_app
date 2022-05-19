@@ -230,8 +230,8 @@ def get_user_categories(conn, uid: int) -> list:
         A list of the user's expense categories
     """
     cur = conn.cursor()
-    cat = cur.execute("SELECT category FROM expenses WHERE user_id=?", (uid,))
-    cat = set(cat)
+    cur.execute("SELECT category FROM expenses WHERE user_id=?", (uid,))
+    cat = set(cur)
 
     categories = []
     if cat:
@@ -253,9 +253,9 @@ def get_expense_today(conn, uid: int) -> tuple:
         A tuple consisting of the user's list of expenses made today and the total
     """
     cur = conn.cursor()
-    exp = cur.execute(
-        "SELECT * FROM expenses WHERE DATE(date) = DATE('now') AND user_id=?", (uid,))
-    today_exp = exp.fetchall()
+    cur.execute(
+        "SELECT * FROM expenses WHERE user_id=? AND date BETWEEN DATE('now', '-1 day') AND DATE('now')", (uid,))
+    today_exp = cur.fetchall()
 
     total = 0
     if today_exp:
@@ -277,9 +277,9 @@ def get_expense_week(conn, uid: int) -> tuple:
         A tuple consisting of the user's list of expenses in the past week and the total
     """
     cur = conn.cursor()
-    exp = cur.execute(
+    cur.execute(
         "SELECT * FROM expenses WHERE DATE(date) >= DATE('now', '-7 day') AND user_id=?", (uid,))
-    week_exp = exp.fetchall()
+    week_exp = cur.fetchall()
 
     total = 0
     if week_exp:
@@ -301,9 +301,9 @@ def get_expense_month(conn, uid: int) -> tuple:
         A tuple consisting of the user's list of expenses in the past 30 days and the total
     """
     cur = conn.cursor()
-    exp = cur.execute(
+    cur.execute(
         "SELECT * FROM expenses WHERE DATE(date) >= DATE('now', '-30 day') AND user_id=?", (uid,))
-    month_exp = exp.fetchall()
+    month_exp = cur.fetchall()
 
     total = 0
     if month_exp:
@@ -326,9 +326,9 @@ def get_expense_keyword(conn, uid: int, kw: str) -> tuple:
         A tuple consisting of the user's list of expenses matching the keyword and the total
     """
     cur = conn.cursor()
-    exp = cur.execute(
+    cur.execute(
         "SELECT * FROM expenses WHERE name LIKE '%'||?||'%' AND user_id=?", (kw, uid,))
-    kw_exp = exp.fetchall()
+    kw_exp = cur.fetchall()
 
     total = 0
     if kw_exp:
@@ -351,9 +351,9 @@ def get_expense_category(conn, uid: int, category: str) -> tuple:
         A tuple consisting of the user's list of expenses matching the category and the total
     """
     cur = conn.cursor()
-    exp = cur.execute(
+    cur.execute(
         "SELECT * FROM expenses WHERE category LIKE '%'||?||'%' AND user_id=?", (category, uid,))
-    category_exp = exp.fetchall()
+    category_exp = cur.fetchall()
 
     total = 0
     if category_exp:
@@ -362,15 +362,7 @@ def get_expense_category(conn, uid: int, category: str) -> tuple:
 
     return total, category_exp
 
-
-def get_expense_today(conn, uid):
+def get_expense_date_search(conn, uid: int, date: str) -> tuple:
     cur = conn.cursor()
-    cur.execute(
-        "SELECT * FROM expenses WHERE user_id=? AND date BETWEEN DATE('now')-1 AND DATE('now')", (uid,))
-    return cur.fetchall()
-
-
-def get_expense_date_search(conn, date):
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM expenses WHERE date=?", (date,))
+    cur.execute("SELECT * FROM expenses WHERE date LIKE '%'||?||'%' AND user_id=?", (date, uid,))
     return cur.fetchall()
