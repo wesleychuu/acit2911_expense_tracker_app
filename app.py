@@ -559,7 +559,7 @@ def search_result_kw(searched):
         total, expenses = get_expense_keyword(conn, session["uid"], searched)
     conn.close()
 
-    expenses = [data_to_dict(e) for e in expenses]
+    expenses = sorted([data_to_dict(e) for e in expenses], key=lambda d: d["date"], reverse=True)
 
     return render_template("search.html", form=form, searched=searched, total=total, expenses=expenses), 200
 
@@ -572,7 +572,7 @@ def search_result_category(searched):
     total, expenses = get_expense_category(conn, session["uid"], searched)
     conn.close()
 
-    expenses = [data_to_dict(e) for e in expenses]
+    expenses = sorted([data_to_dict(e) for e in expenses], key=lambda d: d["date"], reverse=True)
 
     return render_template("search.html", form=form, searched=searched, total=total, expenses=expenses), 200
 
