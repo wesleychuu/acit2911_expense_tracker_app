@@ -158,7 +158,7 @@ def homepage_today():
     total_category_exp = []
     for category in CATEGORIES:
         total_category_exp.append(
-            get_total_expenses_by_category(conn, session["uid"], category)
+            get_total_expenses_by_category_today(conn, session["uid"], category)
         )
 
     total_expense = tuple_expenses[0]
@@ -216,7 +216,7 @@ def homepage_week():
     total_category_exp = []
     for category in CATEGORIES:
         total_category_exp.append(
-            get_total_expenses_by_category(conn, session["uid"], category)
+            get_total_expenses_by_category_week(conn, session["uid"], category)
         )
 
     total_expense = tuple_expenses[0]
@@ -274,7 +274,7 @@ def homepage_month():
     total_category_exp = []
     for category in CATEGORIES:
         total_category_exp.append(
-            get_total_expenses_by_category(conn, session["uid"], category)
+            get_total_expenses_by_category_month(conn, session["uid"], category)
         )
 
     total_expense = tuple_expenses[0]
@@ -332,7 +332,7 @@ def homepage_year():
     total_category_exp = []
     for category in CATEGORIES:
         total_category_exp.append(
-            get_total_expenses_by_category(conn, session["uid"], category)
+            get_total_expenses_by_category_year(conn, session["uid"], category)
         )
 
     total_expense = tuple_expenses[0]
