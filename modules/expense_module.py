@@ -177,6 +177,118 @@ def get_total_expenses_by_category(conn, uid: int, category: str) -> int:
     return total
 
 
+def get_total_expenses_by_category_today(conn, uid: int, category: str) -> int:
+    """
+    Get the total of all user expenses filtered by category and today
+
+    Parameters:
+        conn:           the Connection object
+        uid (int):      the user's id
+        category (str): the category to filter
+
+    Return:
+        aggregate total amount of the given category
+    """
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT amount FROM expenses WHERE user_id=? AND category=? AND date BETWEEN DATE('now', '-1 day') AND DATE('now')",
+        (
+            uid,
+            category,
+        ),
+    )
+
+    total = 0
+    for row in cur.fetchall():
+        total += row[0]
+
+    return total
+
+
+def get_total_expenses_by_category_week(conn, uid: int, category: str) -> int:
+    """
+    Get the total of all user expenses filtered by category and this week
+
+    Parameters:
+        conn:           the Connection object
+        uid (int):      the user's id
+        category (str): the category to filter
+
+    Return:
+        aggregate total amount of the given category
+    """
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT amount FROM expenses WHERE user_id=? AND category=? AND date BETWEEN DATE('now', '-7 day') AND DATE('now')",
+        (
+            uid,
+            category,
+        ),
+    )
+
+    total = 0
+    for row in cur.fetchall():
+        total += row[0]
+
+    return total
+
+
+def get_total_expenses_by_category_month(conn, uid: int, category: str) -> int:
+    """
+    Get the total of all user expenses filtered by category this month
+
+    Parameters:
+        conn:           the Connection object
+        uid (int):      the user's id
+        category (str): the category to filter
+
+    Return:
+        aggregate total amount of the given category
+    """
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT amount FROM expenses WHERE user_id=? AND category=? AND date BETWEEN DATE('now', '-30 day') AND DATE('now')",
+        (
+            uid,
+            category,
+        ),
+    )
+
+    total = 0
+    for row in cur.fetchall():
+        total += row[0]
+
+    return total
+
+
+def get_total_expenses_by_category_year(conn, uid: int, category: str) -> int:
+    """
+    Get the total of all user expenses filtered by category and this year
+
+    Parameters:
+        conn:           the Connection object
+        uid (int):      the user's id
+        category (str): the category to filter
+
+    Return:
+        aggregate total amount of the given category
+    """
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT amount FROM expenses WHERE user_id=? AND category=? AND date BETWEEN DATE('now', '-365 day') AND DATE('now')",
+        (
+            uid,
+            category,
+        ),
+    )
+
+    total = 0
+    for row in cur.fetchall():
+        total += row[0]
+
+    return total
+
+
 def get_total_expenses(conn, uid: int) -> int:
     """
     Get the total of all user expenses
