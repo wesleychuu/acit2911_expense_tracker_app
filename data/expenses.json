@@ -317,36 +317,8 @@
     {
         "userid": 1,
         "name": "Blender",
-        "date": "2022-05-23",
+        "date": "2022-05-20",
         "category": "Lifestyle",
         "amount": 35.00
-    },
-    {
-        "userid": 1,
-        "name": "Peppers",
-        "date": "2022-05-25",
-        "category": "Groceries",
-        "amount": 12.00
-    },
-    {
-        "userid": 1,
-        "name": "Bean Bag Chair",
-        "date": "2022-05-26",
-        "category": "Lifestyle",
-        "amount": 44.50
-    },
-    {
-        "userid": 1,
-        "name": "Chicken Nuggets",
-        "date": "2022-05-29",
-        "category": "Food",
-        "amount": 6.75
-    },
-    {
-        "userid": 1,
-        "name": "Lego",
-        "date": "2022-05-31",
-        "category": "Entertainment",
-        "amount": 53.00
     }
 ]
