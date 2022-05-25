@@ -5,6 +5,10 @@
     --main-font: 'Merriweather Sans', sans-serif;
 }
 
+main {
+    margin-top: 100px;
+}
+
 .filter-tabs {
     display: flex;
     flex-direction: row;
@@ -94,4 +98,41 @@ span,
     top: 0;
     width: 96.5%;
     z-index: 2;
+}
+
+@media screen and (max-width: 600px) {
+    html {
+        width: 100vw;
+    }
+    main {
+        width: max-content;
+        margin-right: auto;
+        margin-left: auto;
+        overflow: scroll;
+        margin-bottom: 60px;
+    }
+
+    .expense-cards {
+        display: block;
+        overflow: scroll;
+        width: max-content;
+        font-size: 0.8rem;
+    }
+    
+    .icons {
+        font-size: 1.9rem;
+    }
+
+    .filter-tabs {
+        font-size: 0.8rem;
+    }
+
+    .total-expense {
+        font-size: 1rem;
+    }
+
+    .fa-pencil-square,
+    .fa-trash {
+    font-size: 1.1rem;
+    }
 }
