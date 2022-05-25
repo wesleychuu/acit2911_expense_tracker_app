@@ -37,7 +37,6 @@
 {% block main_content %}
 <section class="filter-tabs" style="font-size: 5.5vw;">
     <!-- Display filter tabs -->
-    {% if user_expenses|length > 0 %}
     <form action="/home/today" method="post">
         <input type="hidden" name="filter_today" value="Filter_Today">
         <button type="submit" class="filter-btn">Today</button>|
@@ -58,7 +57,6 @@
         <input type="hidden" name="filter_all" value="Filter_All">
         <button type="submit" class="filter-btn">All</button>
     </form>
-    {% endif %}
 </section>
 
 <section class="total-expense" style="font-size: 5.5vw;">
