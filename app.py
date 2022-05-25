@@ -11,13 +11,12 @@ from models.register_form import RegisterForm
 from models.reset_password import ResetPasswordForm
 from models.search_form import SearchForm
 from sql_db import create_connection
-from models.expense import CATEGORIES, Expense
+from models.expense import Expense
 import hashlib
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Thisisspposedtobesecret"
 Bootstrap(app)
-
 
 def data_to_dict(data_tup: tuple) -> dict:
     return {
@@ -28,22 +27,49 @@ def data_to_dict(data_tup: tuple) -> dict:
         "eid": data_tup[0],
     }
 
+def get_pie_data(conn, uid: int) -> dict:
+    categories = get_user_categories(conn, session["uid"])
+   
+    total_category_exp = []
+    for cat in categories:
+        total_category_exp.append(
+            get_total_expenses_by_category(conn, session["uid"], cat)
+        )
+    
+    pie_data = {"Category": "Amount"}
+    for i, cat in enumerate(categories):
+        pie_data[cat] = total_category_exp[i]
+        
+    return pie_data
+
+
+def check_session() -> bool:
+    logged_in = False
+
+    if session["uid"]:
+        logged_in = True
+
+    return logged_in
+
 
 @app.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    conn = create_connection("database.db")
 
     if form.validate_on_submit():
-        user = select_user_by_username(conn, form.username.data)
-        if not user or user[4] != str(
-            hashlib.sha256(form.password.data.encode()).hexdigest()
-        ):
-            flash("Incorrect username or password", category="alert-warning")
-        else:
-            if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
-                session["uid"] = user[0]
-                return redirect(url_for("homepage")), 301
+        try:
+            conn = create_connection("database.db")
+            user = select_user_by_username(conn, form.username.data)
+            if not user or user[4] != str(
+                hashlib.sha256(form.password.data.encode()).hexdigest()
+            ):
+                flash("Incorrect username or password", category="alert-warning")
+            else:
+                if user[4] == str(hashlib.sha256(form.password.data.encode()).hexdigest()):
+                    session["uid"] = user[0]
+                    return redirect(url_for("homepage")), 301
+        finally:
+            conn.close()
 
     return render_template("login.html", form=form)
 
@@ -53,40 +79,40 @@ def signup():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        conn = create_connection("database.db")
+        try:
+            conn = create_connection("database.db")
 
-        existing_username = select_user_by_username(conn, form.username.data)
-        existing_email = select_user_by_email(conn, form.email.data.lower())
+            existing_username = select_user_by_username(conn, form.username.data)
+            existing_email = select_user_by_email(conn, form.email.data.lower())
+            # check if username/email is taken
+            if existing_username:
+                flash("Username already taken.")
+            elif existing_email:
+                flash("Email already registered.")
+            else:
+                # create a new User to validate
+                new_user = User(
+                    name=form.name.data,
+                    username=form.username.data,
+                    email=form.email.data.lower(),
+                    password=form.password.data,
+                )
 
-        # check if username is taken
-        # check if email taken
-        if existing_username:
-            flash("Username already taken.")
-        elif existing_email:
-            flash("Email already registered.")
-        else:
-            # create a new User to validate
-            new_user = User(
-                name=form.name.data,
-                username=form.username.data,
-                email=form.email.data.lower(),
-                password=form.password.data,
-            )
+                # insert user into db
+                insert_user(
+                    conn,
+                    new_user.name,
+                    new_user.username,
+                    new_user.email,
+                    new_user.password,
+                )
 
-            # insert user into db
-            insert_user(
-                conn,
-                new_user.name,
-                new_user.username,
-                new_user.email,
-                new_user.password,
-            )
-
-            conn.close()
             flash(
                 "Great success! New account has been created.", category="alert-success"
             )
             return redirect(url_for("login"))
+        finally:
+            conn.close()
 
     return render_template("signup.html", form=form), 200
 
@@ -94,33 +120,20 @@ def signup():
 @app.route("/home", methods=["GET", "POST"])
 def homepage():
     """Render the homepage of a user -- shows their expenses"""
-    conn = create_connection("database.db")
-    tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
 
-    total_category_exp = []
-    for category in CATEGORIES:
-        total_category_exp.append(
-            get_total_expenses_by_category(conn, session["uid"], category)
-        )
-
-    total_expense = get_total_expenses(conn, session["uid"])
-    conn.close()
+    try:
+        conn = create_connection("database.db")
+        tuple_expenses = select_expenses_by_uid(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"])
+        total_expense = get_total_expenses(conn, session["uid"])
+    finally:
+        conn.close()
 
     user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses],
                            key=lambda d: d["date"], reverse=True)
-
-    pie_data = {
-        "Category": "Amount",
-        "Food": total_category_exp[0],
-        "Apparel": total_category_exp[1],
-        "Entertainment": total_category_exp[2],
-        "Lifestyle": total_category_exp[3],
-        "Miscellaneous": total_category_exp[4],
-        "Groceries": total_category_exp[5],
-        "Services": total_category_exp[6],
-        "Technology": total_category_exp[7],
-        "School": total_category_exp[8],
-    }
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -151,34 +164,21 @@ def homepage():
 @app.route("/home/today", methods=["GET", "POST"])
 def homepage_today():
     """Render the homepage of a user -- shows their expenses from the past 24 hours or from today only"""
-    conn = create_connection("database.db")
-    # Should select the expenses by uid AND (within 24 hours or from today's date)
-    tuple_expenses = get_expense_today(conn, session["uid"])
-
-    total_category_exp = []
-    for category in CATEGORIES:
-        total_category_exp.append(
-            get_total_expenses_by_category_today(conn, session["uid"], category)
-        )
-
-    total_expense = tuple_expenses[0]
-    conn.close()
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+    
+    try:
+        conn = create_connection("database.db")
+        # Should select the expenses by uid AND (within 24 hours or from today's date)
+        tuple_expenses = get_expense_today(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"])
+        total_expense = tuple_expenses[0]
+    finally:
+        conn.close()
 
     user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
-
-    pie_data = {
-        "Category": "Amount",
-        "Food": total_category_exp[0],
-        "Apparel": total_category_exp[1],
-        "Entertainment": total_category_exp[2],
-        "Lifestyle": total_category_exp[3],
-        "Miscellaneous": total_category_exp[4],
-        "Groceries": total_category_exp[5],
-        "Services": total_category_exp[6],
-        "Technology": total_category_exp[7],
-        "School": total_category_exp[8],
-    }
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -209,34 +209,21 @@ def homepage_today():
 @app.route("/home/week", methods=["GET", "POST"])
 def homepage_week():
     """Render the homepage of a user -- shows their expenses from this week or the past 168 hours"""
-    conn = create_connection("database.db")
-    # Should select the expenses by uid AND (within 168 hours or from this week)
-    tuple_expenses = get_expense_week(conn, session["uid"])
-
-    total_category_exp = []
-    for category in CATEGORIES:
-        total_category_exp.append(
-            get_total_expenses_by_category_week(conn, session["uid"], category)
-        )
-
-    total_expense = tuple_expenses[0]
-    conn.close()
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+    
+    try:
+        conn = create_connection("database.db")
+        # Should select the expenses by uid AND (within 168 hours or from this week)
+        tuple_expenses = get_expense_week(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"])
+        total_expense = tuple_expenses[0]
+    finally:
+        conn.close()
 
     user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
-
-    pie_data = {
-        "Category": "Amount",
-        "Food": total_category_exp[0],
-        "Apparel": total_category_exp[1],
-        "Entertainment": total_category_exp[2],
-        "Lifestyle": total_category_exp[3],
-        "Miscellaneous": total_category_exp[4],
-        "Groceries": total_category_exp[5],
-        "Services": total_category_exp[6],
-        "Technology": total_category_exp[7],
-        "School": total_category_exp[8],
-    }
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -267,34 +254,21 @@ def homepage_week():
 @app.route("/home/month", methods=["GET", "POST"])
 def homepage_month():
     """Render the homepage of a user -- shows their expenses from this month"""
-    conn = create_connection("database.db")
-    # Should select the expenses by uid AND from this month
-    tuple_expenses = get_expense_month(conn, session["uid"])
-
-    total_category_exp = []
-    for category in CATEGORIES:
-        total_category_exp.append(
-            get_total_expenses_by_category_month(conn, session["uid"], category)
-        )
-
-    total_expense = tuple_expenses[0]
-    conn.close()
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+    
+    try:
+        conn = create_connection("database.db")
+        # Should select the expenses by uid AND from this month
+        tuple_expenses = get_expense_month(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"])
+        total_expense = tuple_expenses[0]
+    finally:
+        conn.close()
 
     user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
-
-    pie_data = {
-        "Category": "Amount",
-        "Food": total_category_exp[0],
-        "Apparel": total_category_exp[1],
-        "Entertainment": total_category_exp[2],
-        "Lifestyle": total_category_exp[3],
-        "Miscellaneous": total_category_exp[4],
-        "Groceries": total_category_exp[5],
-        "Services": total_category_exp[6],
-        "Technology": total_category_exp[7],
-        "School": total_category_exp[8],
-    }
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -325,34 +299,22 @@ def homepage_month():
 @app.route("/home/year", methods=["GET", "POST"])
 def homepage_year():
     """Render the homepage of a user -- shows their expenses from this year"""
-    conn = create_connection("database.db")
-    # Should select the expenses by uid AND from this year
-    tuple_expenses = get_expense_year(conn, session["uid"])
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+    
+    try:
+        conn = create_connection("database.db")
+        # Should select the expenses by uid AND from this year
+        tuple_expenses = get_expense_year(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"])
 
-    total_category_exp = []
-    for category in CATEGORIES:
-        total_category_exp.append(
-            get_total_expenses_by_category_year(conn, session["uid"], category)
-        )
-
-    total_expense = tuple_expenses[0]
-    conn.close()
+        total_expense = tuple_expenses[0]
+    finally:
+        conn.close()
 
     user_expenses = sorted([data_to_dict(each_expense) for each_expense in tuple_expenses[1]],
                            key=lambda d: d["date"], reverse=True)
-
-    pie_data = {
-        "Category": "Amount",
-        "Food": total_category_exp[0],
-        "Apparel": total_category_exp[1],
-        "Entertainment": total_category_exp[2],
-        "Lifestyle": total_category_exp[3],
-        "Miscellaneous": total_category_exp[4],
-        "Groceries": total_category_exp[5],
-        "Services": total_category_exp[6],
-        "Technology": total_category_exp[7],
-        "School": total_category_exp[8],
-    }
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -383,6 +345,10 @@ def homepage_year():
 @app.route("/add", methods=["GET", "POST"])
 def add_page():
     """Adds an expense under the user's ID"""
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+    
     data = request.form
     conn = create_connection("database.db")
     today = date.today()
@@ -407,11 +373,17 @@ def add_page():
 @app.route("/edit/<eid>", methods=["GET", "POST"])
 def get_expense(eid):
     """View an expense by user id and expense id for editing"""
-    conn = create_connection("database.db")
-    expense = select_one_expense(conn, eid, session["uid"])
-    conn.close()
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
     today = date.today()
-
+    
+    try:
+        conn = create_connection("database.db")
+        expense = select_one_expense(conn, eid, session["uid"])
+    finally:
+        conn.close()
+        
     if request.method == "POST":
         conn = create_connection("database.db")
         data = request.form
@@ -433,11 +405,18 @@ def get_expense(eid):
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    conn = create_connection("database.db")
-    name = select_user_by_id(conn, (session["uid"]))[1]
-    username = select_user_by_id(conn, (session["uid"]))[2]
-    email = select_user_by_id(conn, (session["uid"]))[3]
-    conn.close()
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+
+    try:
+        conn = create_connection("database.db")
+        user = select_user_by_id(conn, session["uid"])
+        name = user[1]
+        username = user[2]
+        email = user[3]
+    finally:
+        conn.close()
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -461,19 +440,29 @@ def profile():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    session["uid"] = None
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+
+    session.pop("uid", None)
     flash("You are logged out", category="alert-success")
     return redirect(url_for("login"))
 
 
 @app.route("/profile/edit", methods=["GET", "POST"])
 def profile_edit():
-    conn = create_connection("database.db")
-    user = select_user_by_id(conn, session["uid"])
-    name = user[1]
-    username = user[2]
-    email = user[3]
-    conn.close()
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+    
+    try:
+        conn = create_connection("database.db")
+        user = select_user_by_id(conn, session["uid"])
+        name = user[1]
+        username = user[2]
+        email = user[3]
+    finally:
+        conn.close()
 
     if request.method == "POST":
         conn = create_connection("database.db")
@@ -501,16 +490,20 @@ def profile_edit():
 @app.route("/profile/resetpassword", methods=["GET", "POST"])
 def reset_password():
     """Delete a user's expense by its id"""
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+    
     form = ResetPasswordForm()
-    conn = create_connection("database.db")
 
     if request.method == "POST":
         if form.validate_on_submit():
-            user = select_user_by_id(conn, session["uid"])
-            if user[4] == str(
-                hashlib.sha256(form.old_password.data.encode()).hexdigest()
-            ):
-                try:
+            try:
+                conn = create_connection("database.db")
+                user = select_user_by_id(conn, session["uid"])
+                if user[4] == str(
+                    hashlib.sha256(form.old_password.data.encode()).hexdigest()
+                ):
                     update_password(
                         conn,
                         session["uid"],
@@ -525,21 +518,25 @@ def reset_password():
                         category="alert-success",
                     )
                     return redirect("/"), 301
-                except ValueError:
-                    return "", 400
-                finally:
-                    conn.close()
+            finally:
+                conn.close()
 
     return render_template("reset_password.html", form=form, uid=session["uid"]), 200
 
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+
     form = SearchForm()
 
-    conn = sqlite3.connect("database.db")
-    categories = get_user_categories(conn, session["uid"])
-    conn.close()
+    try:
+        conn = sqlite3.connect("database.db")
+        categories = get_user_categories(conn, session["uid"])
+    finally:
+        conn.close()
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -551,15 +548,21 @@ def search():
 
 @app.route("/search?search=<searched>", methods=["GET", "POST"])
 def search_result_kw(searched):
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+
     form = SearchForm()
 
-    conn = create_connection("database.db")
-    if re.match("20", searched):
-        total, expenses = get_expense_date_search(
-            conn, session["uid"], searched)
-    else:
-        total, expenses = get_expense_keyword(conn, session["uid"], searched)
-    conn.close()
+    try: 
+        conn = create_connection("database.db")
+        if re.match("20", searched):
+            total, expenses = get_expense_date_search(
+                conn, session["uid"], searched)
+        else:
+            total, expenses = get_expense_keyword(conn, session["uid"], searched)
+    finally:
+        conn.close()
 
     expenses = sorted([data_to_dict(e) for e in expenses],
                       key=lambda d: d["date"], reverse=True)
@@ -569,11 +572,17 @@ def search_result_kw(searched):
 
 @app.route("/search?category=<searched>", methods=["GET", "POST"])
 def search_result_category(searched):
+    if not check_session():
+        flash("You must be logged in to view this page",  category="alert-warning")
+        return redirect(url_for("login"))
+        
     form = SearchForm()
 
-    conn = create_connection("database.db")
-    total, expenses = get_expense_category(conn, session["uid"], searched)
-    conn.close()
+    try:
+        conn = create_connection("database.db")
+        total, expenses = get_expense_category(conn, session["uid"], searched)
+    finally:
+        conn.close()
 
     expenses = sorted([data_to_dict(e) for e in expenses],
                       key=lambda d: d["date"], reverse=True)
