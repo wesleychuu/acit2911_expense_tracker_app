@@ -21,7 +21,9 @@ header {
     background-color: var(--header-footer);
     text-align: center;
     padding: 20px;
-    position: sticky;
+    position: fixed;
+    left: 0;
+    right: 0;
     top: 0;
     z-index: 99999;
 }
@@ -40,13 +42,15 @@ main {
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 97.6px - 55px);
+    margin-bottom: 60px;
 }
 
 footer {
-    position: sticky;
+    position: fixed;
+    left: 0;
+    right: 0;
     bottom: 0;
     height: 55px;
-    width: 100%;
     background-color: var(--header-footer);
 }
 
@@ -67,11 +71,33 @@ a:hover {
     cursor: pointer;
 }
 
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 1.7rem;
+    }
+    
+    .icons {
+        font-size: 1.9rem;
+    }
+    
+    main {
+        min-height: calc(100vh - 72.64px - 45.61px);
+        margin-top: 58px;
+    }
 
-@media screen and (min-width: 600px) {
-    html {
-        width: 100%;
-        margin: auto;
-        overflow-x: hidden;
+    header {
+        height: max-content;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+    }
+
+    footer {
+        height: max-content;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 }

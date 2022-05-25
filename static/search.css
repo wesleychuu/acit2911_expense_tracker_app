@@ -1,0 +1,42 @@
+:root {
+    --header-footer: #2A98A2;
+    --content-txt: #297782;
+    --header-txt: #FFFFFF;
+    --content-back: #cac8c6;
+    --main-font: 'Merriweather Sans', sans-serif;
+}
+
+main {
+    margin-top: 100px;
+}
+
+h2 {
+    color: var(--content-txt);
+}
+
+button.btn-primary {
+    color: var(--content-txt);
+    background-color: var(--content-back);
+    border: solid white;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+@media screen and (max-width: 600px) {
+    html {
+        width: 100vw;
+    }
+
+    main {
+        width: 100%;
+    }
+
+    button.btn-primary {
+        padding: 0;
+    }
+}
