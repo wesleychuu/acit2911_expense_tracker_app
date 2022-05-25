@@ -88,7 +88,7 @@ def signup():
 @app.route("/home", methods=["GET", "POST"])
 def homepage():
     """Render the homepage of a user -- shows their expenses"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -132,7 +132,7 @@ def homepage():
 @app.route("/home/today", methods=["GET", "POST"])
 def homepage_today():
     """Render the homepage of a user -- shows their expenses from the past 24 hours or from today only"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -177,7 +177,7 @@ def homepage_today():
 @app.route("/home/week", methods=["GET", "POST"])
 def homepage_week():
     """Render the homepage of a user -- shows their expenses from this week or the past 168 hours"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -222,7 +222,7 @@ def homepage_week():
 @app.route("/home/month", methods=["GET", "POST"])
 def homepage_month():
     """Render the homepage of a user -- shows their expenses from this month"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -267,7 +267,7 @@ def homepage_month():
 @app.route("/home/year", methods=["GET", "POST"])
 def homepage_year():
     """Render the homepage of a user -- shows their expenses from this year"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -312,7 +312,7 @@ def homepage_year():
 @app.route("/add", methods=["GET", "POST"])
 def add_page():
     """Adds an expense under the user's ID"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -340,7 +340,7 @@ def add_page():
 @app.route("/edit/<eid>", methods=["GET", "POST"])
 def get_expense(eid):
     """View an expense by user id and expense id for editing"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     today = date.today()
@@ -372,7 +372,7 @@ def get_expense(eid):
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -407,7 +407,7 @@ def profile():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -418,7 +418,7 @@ def logout():
 
 @app.route("/profile/edit", methods=["GET", "POST"])
 def profile_edit():
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -457,7 +457,7 @@ def profile_edit():
 @app.route("/profile/resetpassword", methods=["GET", "POST"])
 def reset_password():
     """Delete a user's expense by its id"""
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -493,7 +493,7 @@ def reset_password():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -515,7 +515,7 @@ def search():
 
 @app.route("/search?search=<searched>", methods=["GET", "POST"])
 def search_result_kw(searched):
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -539,7 +539,7 @@ def search_result_kw(searched):
 
 @app.route("/search?category=<searched>", methods=["GET", "POST"])
 def search_result_category(searched):
-    if not check_session(session["uid"]):
+    if "uid" not in session:
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
