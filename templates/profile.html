@@ -4,46 +4,45 @@
 {% block heading1 %} Profile {% endblock %}
 
 {% block main_content %}
-<h5><u>Username</u></h5>
-<p>{{ username }}</p>
-<br>
+  <br>
+  <h5><u>Username</u></h5>
+  <p>{{ username }}</p>
+  <br>
 
-<h5><u>Name</u></h5>
-<p>{{ name }}</p>
-<br>
+  <h5><u>Name</u></h5>
+  <p>{{ name }}</p>
+  <br>
 
-<h5><u>Email</u></h5>
-<p>{{ email }}</p>
+  <h5><u>Email</u></h5>
+  <p>{{ email }}</p>
+  <br>
 
-    <br>
+  <div>
+    <form action="/logout" method="POST">
+      <input type=hidden value="" name=user_to_delete />
+      <button type="submit" class="btn btn-md btn-primary btn-block submit-btn" id="frm-btn">Logout</button>
+    </form>
+  </div>
+  <br>
 
-    <div>
-      <form action="/logout" method="POST">
-        <input type=hidden value="" name=user_to_delete />
-        <button type="submit" class="btn btn-sm btn-primary btn-block submit-btn" id="frm-btn">Logout</button>
-      </form>
-    </div>
-    <br>
-    <div>
-      <a href="{{ url_for('profile_edit') }}">
-        <button type="button" class="btn btn-sm btn-primary btn-block submit-btn" id="frm-btn">Edit Profile</button>
-      </a>
-    </div>
-    <br>
-    <div>
-      <a href="{{ url_for('reset_password') }}">
-        <button type="button" class="btn btn-sm btn-primary btn-block submit-btn" id="frm-btn">Reset Password</button>
-      </a>
-    </div>
-    <br>
-    <div>
-      <form action="/profile" method="POST">
-        <input type=hidden value="" name=user_to_delete />
-        <button type="submit" class="btn btn-sm btn-danger btn-block submit-btn" id="frm-btn">Delete Account</button>
-      </form>
-    </div>
-  </form>
-</div>
-</form>
+  <div>
+    <a href="{{ url_for('profile_edit') }}">
+      <button type="button" class="btn btn-md btn-primary btn-block submit-btn" id="frm-btn">Edit Profile</button>
+    </a>
+  </div>
+  <br>
 
+  <div>
+    <a href="{{ url_for('reset_password') }}">
+      <button type="button" class="btn btn-md btn-primary btn-block submit-btn" id="frm-btn">Reset Password</button>
+    </a>
+  </div>
+  <br>
+
+  <div>
+    <form action="/profile" method="POST">
+      <input type=hidden value="" name=user_to_delete />
+      <button type="submit" class="btn btn-md btn-danger btn-block submit-btn" id="frm-btn">Delete Account</button>
+    </form>
+  </div>
 {% endblock %}

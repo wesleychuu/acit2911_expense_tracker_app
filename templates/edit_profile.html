@@ -8,34 +8,37 @@
 {% block heading1 %} Edit Profile {% endblock %}
 
 {% block main_content %}
-<div class="message">
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
-    {{ message }}
+  <div class="message">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+      {{ message }}
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
-</div>
 
-<form class="editProfileForm" method="post">
-  <div class="edit name">
-    <h2>Name</h2>
-    <input type="text" name="name" placeholder="Name" value="{{ name }}" required>
-  </div>
-  <br>
-  <div class="edit username">
-    <h2>Username</h2>
-    <input type="text" name="username" placeholder="Username" value="{{ username }}" required minlength="5">
-  </div>
-  <br>
-  <div class="edit email">
-    <h2>Email</h2>
-    <input type="email" name="email" placeholder="Email" value="{{ email }}" required>
-  </div>
-  <br>
+  <form class="editProfileForm" method="post">
+    <div class="edit name" style="text-align: center;">
+      <h2>Name</h2>
+      <input type="text" name="name" placeholder="Name" value="{{ name }}" required>
+    </div>
+    <br>
 
-  <button class="btn btn-lg btn-success btn-block submit-btn" type="submit">Save</button>
-  <button class="btn btn-lg btn-primary btn-block submit-btn" type="button"><a href="{{ url_for('profile') }}">Cancel</a></button>
+    <div class="edit username" style="text-align: center;">
+      <h2>Username</h2>
+      <input type="text" name="username" placeholder="Username" value="{{ username }}" required minlength="5">
+    </div>
+    <br>
 
-
-  {% endblock %}
+    <div class="edit email" style="text-align: center;">
+      <h2>Email</h2>
+      <input type="email" name="email" placeholder="Email" value="{{ email }}" required>
+    </div>
+    <br>
+    
+    <div style="text-align: center;">
+      <button class="btn btn-lg btn-success btn-block submit-btn mx-3" type="submit">Save</button>
+      <button class="btn btn-lg btn-primary btn-block submit-btn mx-3" type="button"><a href="{{ url_for('profile') }}">Cancel</a></button>
+    </div>
+  </form>
+{% endblock %}
