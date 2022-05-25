@@ -35,9 +35,8 @@
 {% block heading1 %} Home {% endblock %}
 
 {% block main_content %}
-<section class="filter-tabs">
+<section class="filter-tabs" style="font-size: 5.5vw;">
     <!-- Display filter tabs -->
-    {% if user_expenses|length > 0 %}
     <form action="/home/today" method="post">
         <input type="hidden" name="filter_today" value="Filter_Today">
         <button type="submit" class="filter-btn">Today</button>|
@@ -58,10 +57,9 @@
         <input type="hidden" name="filter_all" value="Filter_All">
         <button type="submit" class="filter-btn">All</button>
     </form>
-    {% endif %}
 </section>
 
-<section class="total-expense">
+<section class="total-expense" style="font-size: 5.5vw;">
     <!-- Display for total user expense goes here -->
     <p>Total: ${{ total_expense }}</p>
 </section>
@@ -73,14 +71,14 @@
 
 <section class="pie-chart-display">
     <!-- Display for pie chart goes here -->
-    <div style=" width: 100%; overflow: hidden;">
-        <div id="piechart_3d" style="width: 300px; height: 167px; overflow: hidden;"></div>
+    <div style="width: 100%; overflow: hidden;">
+        <div id="piechart_3d" style="width: 100vw; height: 17rem; overflow: hidden;"></div>
     </div>
 </section>
 
 <section class="expense-cards">
     <!-- List of current existing user expenses -->
-    <table class="sortable">
+    <table class="sortable" style="width: 88vw">
         {% if user_expenses|length > 0 %}
         <thead>
             <tr>
