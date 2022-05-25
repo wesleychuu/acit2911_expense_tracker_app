@@ -95,7 +95,7 @@ def homepage():
     try:
         conn = create_connection("database.db")
         tuple_expenses = select_expenses_by_uid(conn, session["uid"])
-        pie_data = get_pie_data(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"], "all")
         total_expense = get_total_expenses(conn, session["uid"])
     finally:
         conn.close()
@@ -140,7 +140,7 @@ def homepage_today():
         conn = create_connection("database.db")
         # Should select the expenses by uid AND (within 24 hours or from today's date)
         tuple_expenses = get_expense_today(conn, session["uid"])
-        pie_data = get_pie_data(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"], "today")
         total_expense = tuple_expenses[0]
     finally:
         conn.close()
@@ -185,7 +185,7 @@ def homepage_week():
         conn = create_connection("database.db")
         # Should select the expenses by uid AND (within 168 hours or from this week)
         tuple_expenses = get_expense_week(conn, session["uid"])
-        pie_data = get_pie_data(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"], "week")
         total_expense = tuple_expenses[0]
     finally:
         conn.close()
@@ -230,7 +230,7 @@ def homepage_month():
         conn = create_connection("database.db")
         # Should select the expenses by uid AND from this month
         tuple_expenses = get_expense_month(conn, session["uid"])
-        pie_data = get_pie_data(conn, session["uid"])
+        pie_data = get_pie_data(conn, session["uid"], "month")
         total_expense = tuple_expenses[0]
     finally:
         conn.close()
@@ -275,8 +275,7 @@ def homepage_year():
         conn = create_connection("database.db")
         # Should select the expenses by uid AND from this year
         tuple_expenses = get_expense_year(conn, session["uid"])
-        pie_data = get_pie_data(conn, session["uid"])
-
+        pie_data = get_pie_data(conn, session["uid"], "year")
         total_expense = tuple_expenses[0]
     finally:
         conn.close()
