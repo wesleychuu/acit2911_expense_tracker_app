@@ -1,10 +1,17 @@
+html {
+    width: 100vw;
+    height: 100vh;
+}
+
 body {
     padding-top: 40px;
     padding-bottom: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: auto;
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow-y: hidden;
 }
 
 .container {
@@ -12,22 +19,12 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
     background-color: #2A98A2;
     color: white;
+    min-width: 100vw;
+    min-height: 100vh;
 }
 
-.form-signin {
-    max-width: 330px;
-    padding: 1rem;
-    margin: 0 auto;
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-}
-
-.form-signin,
 .form-signin {
     margin-bottom: 10rem;
 }
@@ -48,8 +45,8 @@ body {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 10px;
-    font-size: 16px;
+    padding: 1rem;
+    font-size: 2rem;
 }
 
 .form-signin .form-control:focus {
@@ -71,22 +68,18 @@ input:focus {
     -webkit-box-shadow: 0 0 .6rem white !important;
 }
 
-a {
+a, a:hover{
     color: white;
-}
-
-a:hover {
-    color: white;
-}
-
-.link {
-    margin-bottom: 1rem;
 }
 
 .message {
     position: absolute;
     text-align: center;
     top: 0;
-    width: 95%;
+    width: 95vw;
     z-index: 2;
+}
+
+.reset {
+    width: 75vw;
 }
