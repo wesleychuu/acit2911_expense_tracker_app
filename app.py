@@ -3,6 +3,7 @@ import re
 import sqlite3
 from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from modules.app_helper_module import *
 from modules.expense_module import *
 from modules.user_module import *
 from models.user import User
@@ -17,39 +18,6 @@ import hashlib
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Thisisspposedtobesecret"
 Bootstrap(app)
-
-def data_to_dict(data_tup: tuple) -> dict:
-    return {
-        "name": data_tup[2],
-        "date": data_tup[3],
-        "category": data_tup[4],
-        "amount": data_tup[5],
-        "eid": data_tup[0],
-    }
-
-def get_pie_data(conn, uid: int) -> dict:
-    categories = get_user_categories(conn, session["uid"])
-   
-    total_category_exp = []
-    for cat in categories:
-        total_category_exp.append(
-            get_total_expenses_by_category(conn, session["uid"], cat)
-        )
-    
-    pie_data = {"Category": "Amount"}
-    for i, cat in enumerate(categories):
-        pie_data[cat] = total_category_exp[i]
-        
-    return pie_data
-
-
-def check_session() -> bool:
-    logged_in = False
-
-    if session["uid"]:
-        logged_in = True
-
-    return logged_in
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -120,7 +88,7 @@ def signup():
 @app.route("/home", methods=["GET", "POST"])
 def homepage():
     """Render the homepage of a user -- shows their expenses"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -164,7 +132,7 @@ def homepage():
 @app.route("/home/today", methods=["GET", "POST"])
 def homepage_today():
     """Render the homepage of a user -- shows their expenses from the past 24 hours or from today only"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -209,7 +177,7 @@ def homepage_today():
 @app.route("/home/week", methods=["GET", "POST"])
 def homepage_week():
     """Render the homepage of a user -- shows their expenses from this week or the past 168 hours"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -254,7 +222,7 @@ def homepage_week():
 @app.route("/home/month", methods=["GET", "POST"])
 def homepage_month():
     """Render the homepage of a user -- shows their expenses from this month"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -299,7 +267,7 @@ def homepage_month():
 @app.route("/home/year", methods=["GET", "POST"])
 def homepage_year():
     """Render the homepage of a user -- shows their expenses from this year"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -345,7 +313,7 @@ def homepage_year():
 @app.route("/add", methods=["GET", "POST"])
 def add_page():
     """Adds an expense under the user's ID"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -373,7 +341,7 @@ def add_page():
 @app.route("/edit/<eid>", methods=["GET", "POST"])
 def get_expense(eid):
     """View an expense by user id and expense id for editing"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     today = date.today()
@@ -405,7 +373,7 @@ def get_expense(eid):
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -440,7 +408,7 @@ def profile():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -451,7 +419,7 @@ def logout():
 
 @app.route("/profile/edit", methods=["GET", "POST"])
 def profile_edit():
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -490,7 +458,7 @@ def profile_edit():
 @app.route("/profile/resetpassword", methods=["GET", "POST"])
 def reset_password():
     """Delete a user's expense by its id"""
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
     
@@ -526,7 +494,7 @@ def reset_password():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -548,7 +516,7 @@ def search():
 
 @app.route("/search?search=<searched>", methods=["GET", "POST"])
 def search_result_kw(searched):
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
 
@@ -572,10 +540,10 @@ def search_result_kw(searched):
 
 @app.route("/search?category=<searched>", methods=["GET", "POST"])
 def search_result_category(searched):
-    if not check_session():
+    if not check_session(session["uid"]):
         flash("You must be logged in to view this page",  category="alert-warning")
         return redirect(url_for("login"))
-        
+
     form = SearchForm()
 
     try:
